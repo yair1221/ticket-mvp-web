@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-brand: #2563EB;
+  --color-brand-light: #DBEAFE;
+  --color-brand-dark: #1D4ED8;
+  --color-verified: #22C55E;
+  --color-demand: #F97316;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Assistant', sans-serif;
+  background: #f8f9fa;
+  color: #1a1a2e;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Hide scrollbar for team filter */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
