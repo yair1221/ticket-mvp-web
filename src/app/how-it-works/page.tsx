@@ -1,4 +1,6 @@
+import Link from 'next/link';
 import { Search, Phone, Ticket, Trophy, ShieldCheck, Banknote, Headphones, ChevronDown } from 'lucide-react';
+import SiteLogo from '@/components/shared/SiteLogo';
 
 const steps = [
   {
@@ -32,10 +34,8 @@ export default function HowItWorksPage() {
     <div className="pt-4">
       {/* Header */}
       <div className="flex items-center justify-center px-4 pb-4 border-b border-gray-100">
-        <h1 className="text-lg font-bold">איך זה עובד?</h1>
-        <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center absolute left-4" style={{ position: 'absolute', right: 16 }}>
-          <span className="text-white text-sm">⚽</span>
-        </div>
+        <h1 className="text-lg font-bold flex-1 text-center">איך זה עובד?</h1>
+        <Link href="/"><SiteLogo /></Link>
       </div>
 
       {/* Steps */}

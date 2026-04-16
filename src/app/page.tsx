@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { User, ShieldCheck, Banknote, Headphones, ArrowLeft, Loader2 } from 'lucide-react';
 import GameCard from '@/components/game/GameCard';
+import SiteLogo from '@/components/shared/SiteLogo';
 import { createClient } from '@/lib/supabase/client';
 import type { EventWithStats } from '@/lib/types/database';
 
@@ -71,16 +72,14 @@ export default function HomePage() {
   return (
     <div className="px-4 pt-4 space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between flex-row-reverse">
+        <Link href="/" className="flex items-center gap-1.5">
+          <SiteLogo />
+          <span className="text-xl font-bold text-brand">TicketIL</span>
+        </Link>
         <Link href="/profile" className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
           <User size={20} className="text-gray-400" />
         </Link>
-        <div className="flex items-center gap-1.5">
-          <span className="text-xl font-bold text-brand">TicketIL</span>
-          <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center">
-            <span className="text-white text-sm">⚽</span>
-          </div>
-        </div>
       </div>
 
       {/* Hero Event */}
@@ -95,17 +94,17 @@ export default function HomePage() {
       )}
 
       {/* Trust Section */}
-      <div className="flex items-center justify-around bg-gray-50 rounded-2xl p-4">
+      <div className="flex items-center justify-around bg-gray-100 rounded-2xl p-4">
         <div className="flex flex-col items-center">
           <ShieldCheck size={24} className="text-brand" />
           <span className="text-[10px] font-medium text-gray-600 mt-1">כרטיסים מאומתים</span>
         </div>
-        <div className="w-px h-8 bg-gray-200" />
+        <div className="w-px h-8 bg-gray-300" />
         <div className="flex flex-col items-center">
           <Banknote size={24} className="text-brand" />
           <span className="text-[10px] font-medium text-gray-600 mt-1">ללא עמלות</span>
         </div>
-        <div className="w-px h-8 bg-gray-200" />
+        <div className="w-px h-8 bg-gray-300" />
         <div className="flex flex-col items-center">
           <Headphones size={24} className="text-brand" />
           <span className="text-[10px] font-medium text-gray-600 mt-1">תמיכה 24/7</span>
@@ -125,7 +124,7 @@ export default function HomePage() {
       {upcomingEvents.length > 0 && (
         <div>
           <h2 className="text-lg font-bold text-right mb-3">משחקים קרובים</h2>
-          <div className="space-y-3">
+          <div className="space-y-4">
             {upcomingEvents.map((event) => (
               <GameCard key={event.id} event={event} />
             ))}
@@ -135,7 +134,7 @@ export default function HomePage() {
 
       {events.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20">
-          <span className="text-6xl mb-4">⚽</span>
+          <SiteLogo size={64} />
           <p className="text-xl font-bold">אין אירועים כרגע</p>
           <p className="text-sm text-gray-500">אירועים חדשים יתווספו בקרוב!</p>
         </div>

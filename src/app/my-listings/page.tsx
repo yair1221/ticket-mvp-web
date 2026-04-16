@@ -1,12 +1,14 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Lock, LogIn, Ticket, Calendar, Loader2, CheckCircle, Trash2 } from 'lucide-react';
+import { Lock, LogIn, Ticket, Calendar, Loader2, CheckCircle, Trash2, ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils/cn';
 import { formatEventDate } from '@/lib/utils/format';
+import SiteLogo from '@/components/shared/SiteLogo';
 import type { Listing, Event } from '@/lib/types/database';
 
 interface ListingWithEvent extends Listing {
@@ -84,11 +86,11 @@ export default function MyListingsPage() {
     <div className="pt-4">
       {/* Header */}
       <div className="flex items-center justify-between px-4 pb-4 border-b border-gray-100">
-        <div className="w-8" />
-        <h1 className="text-lg font-bold">הכרטיסים שלי</h1>
-        <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center">
-          <span className="text-white text-sm">⚽</span>
-        </div>
+        <button onClick={() => router.back()} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
+          <ArrowLeft size={16} className="text-brand" />
+        </button>
+        <h1 className="text-lg font-bold flex-1 text-center">הכרטיסים שלי</h1>
+        <Link href="/"><SiteLogo /></Link>
       </div>
 
       {/* Filter tabs */}

@@ -1,5 +1,6 @@
 'use client';
 
+import { useRef } from 'react';
 import { cn } from '@/lib/utils/cn';
 import { TEAMS } from '@/lib/constants/teams';
 import { Users } from 'lucide-react';
@@ -11,10 +12,21 @@ interface TeamFilterProps {
 }
 
 export default function TeamFilter({ selectedTeam, onSelect }: TeamFilterProps) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleSelect = (team: string | null) => {
+    onSelect(team);
+    setTimeout(() => {
+      if (scrollRef.current) {
+        scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
+      }
+    }, 0);
+  };
+
   return (
-    <div className="flex gap-3 overflow-x-auto no-scrollbar py-2 px-1 flex-row-reverse">
+    <div ref={scrollRef} className="flex gap-3 overflow-x-auto no-scrollbar py-2 px-1 flex-row-reverse">
       <button
-        onClick={() => onSelect(null)}
+        onClick={() => handleSelect(null)}
         className="flex flex-col items-center gap-1.5 min-w-[60px] transition-all"
       >
         <div className={cn(
@@ -33,19 +45,20 @@ export default function TeamFilter({ selectedTeam, onSelect }: TeamFilterProps) 
         </span>
       </button>
 
-      {TEAMS.map((team) => (
+      {(selectedTeam
+        ? [TEAMS.find((t) => t.name === selectedTeam)!, ...TEAMS.filter((t) => t.name !== selectedTeam)]
+        : TEAMS
+      ).map((team) => (
         <button
           key={team.id}
-          onClick={() => onSelect(team.name === selectedTeam ? null : team.name)}
+          onClick={() => handleSelect(team.name === selectedTeam ? null : team.name)}
           className="flex flex-col items-center gap-1.5 min-w-[60px] transition-all"
         >
           <div className={cn(
-            'w-12 h-12 rounded-full flex items-center justify-center border-2 transition-colors overflow-hidden p-1.5',
-            selectedTeam === team.name
-              ? 'border-brand bg-brand/10'
-              : 'border-gray-200 bg-white'
+            'w-12 h-12 flex items-center justify-center transition-opacity',
+            selectedTeam !== null && selectedTeam !== team.name && 'opacity-50'
           )}>
-            <TeamLogo teamName={team.name} size={28} />
+            <TeamLogo teamName={team.name} size={44} />
           </div>
           <span className={cn(
             'text-[10px] font-medium whitespace-nowrap',

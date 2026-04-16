@@ -8,7 +8,7 @@ interface TeamLogoProps {
 }
 
 function getTeamLogoPath(teamName: string): string | null {
-  const team = TEAMS.find((t) => t.name === teamName);
+  const team = TEAMS.find((t) => t.name === teamName || t.shortName === teamName);
   return team?.logo ?? null;
 }
 

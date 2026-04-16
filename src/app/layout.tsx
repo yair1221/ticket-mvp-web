@@ -28,7 +28,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="he" dir="rtl" className={assistant.variable}>
+    <html lang="he" dir="ltr" className={assistant.variable}>
       <body className="min-h-dvh pb-20">
         <Providers>
           <main className="max-w-lg mx-auto">

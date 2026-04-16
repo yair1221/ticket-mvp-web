@@ -2,14 +2,15 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Trophy, PlusCircle, HelpCircle, User } from 'lucide-react';
+import { Home, PlusCircle, HelpCircle, User } from 'lucide-react';
+import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import { cn } from '@/lib/utils/cn';
 
 const tabs = [
   { href: '/profile', label: 'פרופיל', icon: User },
   { href: '/how-it-works', label: 'איך זה עובד', icon: HelpCircle },
   { href: '/sell', label: 'מכור', icon: PlusCircle, highlight: true },
-  { href: '/games', label: 'משחקים', icon: Trophy },
+  { href: '/games', label: 'משחקים', icon: null, useSoccer: true },
   { href: '/', label: 'בית', icon: Home },
 ];
 
@@ -42,6 +43,8 @@ export default function BottomNav() {
                 )}>
                   <Icon size={22} />
                 </div>
+              ) : tab.useSoccer ? (
+                <SportsSoccerIcon style={{ fontSize: 22, color: isActive ? '#2563EB' : '#94A3B8' }} />
               ) : (
                 <Icon size={22} />
               )}

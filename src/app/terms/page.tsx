@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Info, Tag, ArrowLeftRight, XCircle, ChevronDown, ChevronUp, Mail } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Info, Tag, ArrowLeftRight, XCircle, ChevronDown, ChevronUp, Mail } from 'lucide-react';
+import SiteLogo from '@/components/shared/SiteLogo';
 
 const sections = [
   {
@@ -28,19 +30,18 @@ const sections = [
 ];
 
 export default function TermsPage() {
+  const router = useRouter();
   const [expanded, setExpanded] = useState<number | null>(1);
 
   return (
     <div className="pt-4">
       {/* Header */}
       <div className="flex items-center justify-between px-4 pb-4 border-b border-gray-100">
-        <Link href="/profile" className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-          <ArrowRight size={16} className="text-brand" />
-        </Link>
+        <button onClick={() => router.back()} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
+          <ArrowLeft size={16} className="text-brand" />
+        </button>
         <h1 className="text-lg font-bold flex-1 text-center">תקנון שימוש</h1>
-        <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center">
-          <span className="text-white text-sm">⚽</span>
-        </div>
+        <Link href="/"><SiteLogo /></Link>
       </div>
 
       {/* Intro */}

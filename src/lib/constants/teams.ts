@@ -12,7 +12,7 @@ export const TEAMS: Team[] = [
   { id: 'maccabi-haifa', name: 'מכבי חיפה', shortName: 'מכבי חיפה', logo: '/teams/maccabi-haifa.svg' },
   { id: 'hapoel-beer-sheva', name: 'הפועל באר שבע', shortName: 'הפועל ב"ש', logo: '/teams/hapoel-beer-sheva.svg' },
   { id: 'hapoel-haifa', name: 'הפועל חיפה', shortName: 'הפועל חיפה', logo: '/teams/hapoel-haifa.svg' },
-  { id: 'bnei-sakhnin', name: 'בני סחנין', shortName: 'בני סחנין', logo: '/teams/bnei-sakhnin.svg' },
+  { id: 'bnei-sakhnin', name: 'בני סחנין', shortName: 'בני סכנין', logo: '/teams/bnei-sakhnin.svg' },
   { id: 'ashdod', name: 'מ.ס. אשדוד', shortName: 'מ.ס. אשדוד', logo: '/teams/ashdod.svg' },
   { id: 'maccabi-netanya', name: 'מכבי נתניה', shortName: 'מכבי נתניה', logo: '/teams/maccabi-netanya.svg' },
   { id: 'hapoel-jerusalem', name: 'הפועל ירושלים', shortName: 'הפועל י-ם', logo: '/teams/hapoel-jerusalem.svg' },

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import { User, Loader2, ArrowUpDown, X } from 'lucide-react';
 import GameCard from '@/components/game/GameCard';
+import SiteLogo from '@/components/shared/SiteLogo';
 import TeamFilter from '@/components/game/TeamFilter';
 import { createClient } from '@/lib/supabase/client';
 import type { EventWithStats } from '@/lib/types/database';
@@ -83,18 +84,16 @@ export default function GamesPage() {
         });
 
   return (
-    <div className="pt-4 space-y-3">
+    <div className="pt-4 space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between px-4">
+      <div className="flex items-center justify-between flex-row-reverse px-4">
+        <Link href="/" className="flex items-center gap-1.5">
+          <SiteLogo />
+          <span className="text-xl font-bold text-brand">TicketIL</span>
+        </Link>
         <Link href="/profile" className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
           <User size={20} className="text-gray-400" />
         </Link>
-        <div className="flex items-center gap-1.5">
-          <span className="text-xl font-bold text-brand">TicketIL</span>
-          <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center">
-            <span className="text-white text-sm">⚽</span>
-          </div>
-        </div>
       </div>
 
       {/* Team Filter */}
@@ -148,7 +147,7 @@ export default function GamesPage() {
           <Loader2 size={32} className="text-brand animate-spin" />
         </div>
       ) : (
-        <div className="px-4 space-y-3">
+        <div className="px-4 space-y-4">
           {sortedEvents.map((event) => (
             <GameCard key={event.id} event={event} />
           ))}

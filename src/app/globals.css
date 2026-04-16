@@ -17,6 +17,21 @@ body {
   background: #f8f9fa;
   color: #1a1a2e;
   -webkit-font-smoothing: antialiased;
+  direction: rtl;
+  text-align: right;
+}
+
+* {
+  direction: ltr;
+}
+
+h1, h2, h3, h4, h5, h6, p, span, label, a, button, input, textarea {
+  direction: rtl;
+  text-align: right;
+}
+
+h1.text-center, h2.text-center, h3.text-center {
+  text-align: center;
 }
 
 /* Hide scrollbar for team filter */

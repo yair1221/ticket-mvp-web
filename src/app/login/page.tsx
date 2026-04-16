@@ -3,14 +3,18 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Phone, Loader2, ShieldCheck, Info } from 'lucide-react';
+import { ArrowLeft, Phone, Loader2, ShieldCheck, Info, UserPlus } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import SiteLogo from '@/components/shared/SiteLogo';
 import { cn } from '@/lib/utils/cn';
 
 export default function LoginPage() {
   const [phone, setPhone] = useState('');
   const [otp, setOtp] = useState('');
-  const [step, setStep] = useState<'phone' | 'otp'>('phone');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [step, setStep] = useState<'phone' | 'otp' | 'name'>('phone');
+  const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
@@ -33,6 +37,11 @@ export default function LoginPage() {
     setLoading(false);
   };
 
+  const navigateAfterLogin = () => {
+    const hasPending = sessionStorage.getItem('pending_listing');
+    router.replace(hasPending ? '/sell' : '/');
+  };
+
   const handleVerifyOtp = async () => {
     setLoading(true);
     setError('');
@@ -51,31 +60,68 @@ export default function LoginPage() {
     }
 
     if (data.user) {
-      await supabase.from('profiles').upsert(
-        { id: data.user.id, phone },
-        { onConflict: 'id' }
-      );
-      router.replace('/');
+      setUserId(data.user.id);
+
+      // בדיקה אם למשתמש כבר יש שם
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('name')
+        .eq('id', data.user.id)
+        .single();
+
+      if (profile?.name) {
+        // משתמש קיים עם שם - ממשיכים
+        navigateAfterLogin();
+      } else {
+        // משתמש חדש - צריך שם
+        await supabase.from('profiles').upsert(
+          { id: data.user.id, phone },
+          { onConflict: 'id' }
+        );
+        setStep('name');
+      }
     }
     setLoading(false);
+  };
+
+  const handleSaveName = async () => {
+    if (!firstName.trim() || !lastName.trim() || !userId) return;
+    setLoading(true);
+
+    const supabase = createClient();
+    await supabase
+      .from('profiles')
+      .update({ name: `${firstName.trim()} ${lastName.trim()}` })
+      .eq('id', userId);
+
+    setLoading(false);
+    navigateAfterLogin();
+  };
+
+  const handleBack = () => {
+    if (step === 'otp') setStep('phone');
+    else if (step === 'name') return; // לא ניתן לחזור אחורה משלב השם
+    else router.back();
   };
 
   return (
     <div className="px-6 pt-4 space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <button
-          onClick={() => step === 'otp' ? setStep('phone') : router.back()}
-          className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center"
-        >
-          <ArrowRight size={20} className="text-brand" />
-        </button>
-        <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center">
-          <span className="text-white text-sm">⚽</span>
-        </div>
+        {step !== 'name' ? (
+          <button
+            onClick={handleBack}
+            className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center"
+          >
+            <ArrowLeft size={16} className="text-brand" />
+          </button>
+        ) : (
+          <div className="w-9" />
+        )}
+        <Link href="/"><SiteLogo /></Link>
       </div>
 
-      {step === 'phone' ? (
+      {step === 'phone' && (
         <>
           <div className="flex flex-col items-center gap-2 pt-4">
             <div className="w-[72px] h-[72px] rounded-full bg-brand/10 flex items-center justify-center">
@@ -126,7 +172,9 @@ export default function LoginPage() {
             <span className="text-[10px] text-gray-400">המספר שלך מאובטח ולא ישותף</span>
           </div>
         </>
-      ) : (
+      )}
+
+      {step === 'otp' && (
         <>
           <div className="flex flex-col items-center gap-2 pt-4">
             <div className="w-[72px] h-[72px] rounded-full bg-brand/10 flex items-center justify-center">
@@ -173,6 +221,55 @@ export default function LoginPage() {
               שלח שוב
             </button>
           </div>
+        </>
+      )}
+
+      {step === 'name' && (
+        <>
+          <div className="flex flex-col items-center gap-2 pt-4">
+            <div className="w-[72px] h-[72px] rounded-full bg-brand/10 flex items-center justify-center">
+              <UserPlus size={32} className="text-brand" />
+            </div>
+            <h1 className="text-xl font-bold text-center mt-4">ברוך הבא!</h1>
+            <p className="text-sm text-gray-500 text-center">הזן את שמך כדי להשלים את ההרשמה</p>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs font-medium mb-2 pr-1">שם פרטי</label>
+              <input
+                type="text"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                placeholder="ישראל"
+                className="w-full border border-gray-200 rounded-xl p-3.5 text-right bg-white"
+                autoFocus
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium mb-2 pr-1">שם משפחה</label>
+              <input
+                type="text"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                placeholder="ישראלי"
+                className="w-full border border-gray-200 rounded-xl p-3.5 text-right bg-white"
+              />
+            </div>
+          </div>
+
+          <button
+            onClick={handleSaveName}
+            disabled={!firstName.trim() || !lastName.trim() || loading}
+            className={cn(
+              'w-full font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors',
+              firstName.trim() && lastName.trim() && !loading
+                ? 'bg-brand hover:bg-brand-dark text-white'
+                : 'bg-brand/30 text-white/70 cursor-not-allowed'
+            )}
+          >
+            {loading ? <Loader2 size={20} className="animate-spin" /> : <span>סיים הרשמה</span>}
+          </button>
         </>
       )}
     </div>

@@ -2,9 +2,12 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Headphones, MessageCircle, Phone, Mail, Send } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Headphones, MessageCircle, Phone, Mail, Send } from 'lucide-react';
+import SiteLogo from '@/components/shared/SiteLogo';
 
 export default function SupportPage() {
+  const router = useRouter();
   const [subject, setSubject] = useState('בעיה ברכישת כרטיס');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
@@ -22,13 +25,11 @@ export default function SupportPage() {
     <div className="pt-4">
       {/* Header */}
       <div className="flex items-center justify-between px-4 pb-4 border-b border-gray-100">
-        <Link href="/profile" className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
-          <ArrowRight size={16} className="text-brand" />
-        </Link>
+        <button onClick={() => router.back()} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
+          <ArrowLeft size={16} className="text-brand" />
+        </button>
         <h1 className="text-lg font-bold flex-1 text-center">תמיכה</h1>
-        <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center">
-          <span className="text-white text-sm">⚽</span>
-        </div>
+        <Link href="/"><SiteLogo /></Link>
       </div>
 
       {/* Hero */}

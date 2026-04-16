@@ -18,50 +18,59 @@ export default function TicketCard({ listing, homeTeam, awayTeam }: TicketCardPr
   };
 
   return (
-    <div className="bg-white rounded-2xl p-5 border border-gray-100 space-y-3.5">
-      {/* Seller + Verified */}
-      <div className="flex items-center gap-2 justify-end">
-        <div className="flex items-center gap-1 bg-green-500 text-white text-[10px] font-semibold px-2 py-1 rounded-full">
-          <ShieldCheck size={12} />
-          <span>מוכר מאומת</span>
-        </div>
-        <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
-          <User size={20} className="text-brand" />
+    <div className="bg-white rounded-2xl px-3.5 py-2.5 border border-gray-100 shadow-sm">
+      {/* Top row: seller info */}
+      <div className="flex items-center justify-end">
+        <div className="flex items-center gap-2">
+          <div className="flex flex-col items-end">
+            <span className="text-base font-bold">{listing.profiles?.name || 'מוכר'}</span>
+            <div className="flex items-center gap-1 text-green-500">
+              <span className="text-[10px] font-semibold">מאומת</span>
+              <ShieldCheck size={12} />
+            </div>
+          </div>
+          <div className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
+            <User size={18} className="text-brand" />
+          </div>
         </div>
       </div>
 
-      {/* Section + Price row */}
-      <div className="flex items-center justify-between">
-        <div className="bg-brand/10 rounded-2xl px-3 py-1.5">
-          <span className="text-base font-bold text-brand">₪{listing.price}</span>
+      {/* Details row */}
+      <div className="flex items-center justify-between mt-1.5">
+        <div className="bg-brand/10 rounded-full px-4 py-1.5">
+          <span className="text-base font-extrabold text-brand">₪{listing.price}</span>
         </div>
-        <div className="text-right flex-1">
-          {listing.section && (
-            <p className="text-lg font-bold">{listing.section}</p>
-          )}
-          {(listing.row_number || listing.seat_number) && (
-            <p className="text-[13px] text-gray-500 mt-0.5">
-              {[
-                listing.row_number && `שורה ${listing.row_number}`,
-                listing.seat_number && `כסא ${listing.seat_number}`,
-              ].filter(Boolean).join(' · ')}
-            </p>
-          )}
+        <div className="flex items-center gap-2 text-[13px] text-gray-500">
+        {listing.section && (
+          <span className="font-bold text-gray-700 text-sm">{listing.section}</span>
+        )}
+        {listing.row_number && (
+          <>
+            <span className="text-gray-300">·</span>
+            <span>שורה {listing.row_number}</span>
+          </>
+        )}
+        {listing.seat_number && (
+          <>
+            <span className="text-gray-300">·</span>
+            <span>כסא {listing.seat_number}</span>
+          </>
+        )}
         </div>
       </div>
 
       {/* Notes */}
       {listing.notes && (
-        <p className="text-xs text-gray-400 text-right">{listing.notes}</p>
+        <p className="text-[11px] text-gray-400 text-right mt-1.5">{listing.notes}</p>
       )}
 
-      {/* Contact */}
+      {/* Contact button */}
       <button
         onClick={handleContact}
-        className="w-full bg-brand hover:bg-brand-dark text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 transition-colors"
+        className="w-full bg-brand hover:bg-brand-dark text-white font-bold py-2 rounded-xl flex items-center justify-center gap-2 transition-colors mt-2"
       >
-        <MessageCircle size={18} />
-        <span>צור קשר</span>
+        <MessageCircle size={16} />
+        <span className="text-sm">צור קשר בוואטסאפ</span>
       </button>
     </div>
   );

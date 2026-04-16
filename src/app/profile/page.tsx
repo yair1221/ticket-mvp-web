@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { User, HelpCircle, FileText, Headphones, ChevronLeft, LogIn, Ticket, LogOut, Loader2 } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { createClient } from '@/lib/supabase/client';
+import SiteLogo from '@/components/shared/SiteLogo';
 
 interface MenuItem {
   icon: React.ReactNode;
@@ -62,10 +63,8 @@ export default function ProfilePage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="w-8" />
-        <h1 className="text-lg font-bold">פרופיל</h1>
-        <div className="w-8 h-8 rounded-full bg-brand flex items-center justify-center">
-          <span className="text-white text-sm">⚽</span>
-        </div>
+        <h1 className="text-lg font-bold flex-1 text-center">פרופיל</h1>
+        <Link href="/"><SiteLogo /></Link>
       </div>
 
       {/* Avatar + Info */}
