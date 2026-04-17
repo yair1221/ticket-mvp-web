@@ -1,6 +1,7 @@
 'use client';
 
 import { Share2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 interface ShareButtonProps {
   title: string;
@@ -18,16 +19,16 @@ export default function ShareButton({ title, text }: ShareButtonProps) {
       }
     } else {
       await navigator.clipboard.writeText(url);
-      alert('הקישור הועתק!');
+      toast.success('הקישור הועתק!');
     }
   };
 
   return (
     <button
       onClick={handleShare}
-      className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors"
+      className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center hover:bg-slate-200 transition-colors"
     >
-      <Share2 size={16} className="text-gray-500" />
+      <Share2 size={16} className="text-slate-500" />
     </button>
   );
 }

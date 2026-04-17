@@ -4,8 +4,10 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Tag, Loader2, Star, CheckCircle, Ticket, ArrowLeft } from 'lucide-react';
+import { toast } from 'sonner';
 import { useAuth } from '@/lib/auth-context';
 import { createClient } from '@/lib/supabase/client';
+import { posthog } from '@/lib/posthog';
 import TeamFilter from '@/components/game/TeamFilter';
 import TeamLogo from '@/components/shared/TeamLogo';
 import { formatEventDate } from '@/lib/utils/format';
@@ -79,8 +81,10 @@ export default function SellPage() {
 
     setLoading(false);
     if (error) {
-      alert('שגיאה: ' + error.message);
+      posthog.capture('sell_form_error', { error: error.message, source: 'pending' });
+      toast.error('שגיאה בפרסום הכרטיס: ' + error.message);
     } else {
+      posthog.capture('sell_form_success', { listing_id: data.id, source: 'pending' });
       setPublishedListingId(data.id);
       setPublished(true);
     }
@@ -95,6 +99,13 @@ export default function SellPage() {
   // שמירה ומעבר ללוגין, או פרסום ישיר
   const handleSubmit = async () => {
     if (!selectedEvent || !price || parseInt(price) < 1 || !section) return;
+    posthog.capture('sell_form_submitted', {
+      event_id: selectedEvent.id,
+      home_team: selectedEvent.home_team,
+      away_team: selectedEvent.away_team,
+      price: parseInt(price),
+      section,
+    });
 
     if (!user) {
       const pending: PendingListing = {
@@ -125,8 +136,10 @@ export default function SellPage() {
 
     setLoading(false);
     if (error) {
-      alert('שגיאה: ' + error.message);
+      posthog.capture('sell_form_error', { error: error.message });
+      toast.error('שגיאה בפרסום הכרטיס: ' + error.message);
     } else {
+      posthog.capture('sell_form_success', { listing_id: data.id });
       setPublishedListingId(data.id);
       setPublished(true);
     }
@@ -145,7 +158,7 @@ export default function SellPage() {
     return (
       <div className="px-4 pt-4 space-y-4">
         <div className="flex items-center justify-between">
-          <button onClick={() => router.back()} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
+          <button onClick={() => router.back()} className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
             <ArrowLeft size={16} className="text-brand" />
           </button>
           <h1 className="text-lg font-bold flex-1 text-center">פרסום כרטיס</h1>
@@ -157,7 +170,7 @@ export default function SellPage() {
             <CheckCircle size={44} className="text-green-500" />
           </div>
           <h2 className="text-xl font-bold">הכרטיס פורסם בהצלחה!</h2>
-          <p className="text-sm text-gray-500 text-center">הכרטיס שלך זמין כעת לקונים באתר</p>
+          <p className="text-sm text-slate-500 text-center">הכרטיס שלך זמין כעת לקונים באתר</p>
 
           <Link
             href={publishedListingId ? '/my-listings' : '/my-listings'}
@@ -178,7 +191,7 @@ export default function SellPage() {
               setSeatNumber('');
               setNotes('');
             }}
-            className="w-full border border-gray-200 text-gray-700 font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors hover:bg-gray-50"
+            className="w-full border border-slate-200 text-slate-700 font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors hover:bg-slate-50"
           >
             <Tag size={18} />
             <span>פרסם כרטיס נוסף</span>
@@ -196,7 +209,7 @@ export default function SellPage() {
     <div className="px-4 pt-4 space-y-4 pb-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <button onClick={() => router.back()} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
+        <button onClick={() => router.back()} className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
           <ArrowLeft size={16} className="text-brand" />
         </button>
         <h1 className="text-lg font-bold flex-1 text-center">פרסום כרטיס</h1>
@@ -212,7 +225,7 @@ export default function SellPage() {
         {selectedEvent ? (
           <button
             onClick={() => { setSelectedEvent(null); setShowPicker(true); }}
-            className="w-full bg-gray-50 rounded-2xl border border-gray-200 py-2 px-3 flex items-center justify-between flex-row-reverse"
+            className="w-full bg-slate-50 rounded-2xl border border-slate-200 py-2 px-3 flex items-center justify-between flex-row-reverse"
           >
             <div className="flex flex-col items-center gap-0.5 flex-1">
               <TeamLogo teamName={selectedEvent.away_team} size={24} />
@@ -227,10 +240,10 @@ export default function SellPage() {
         ) : (
           <button
             onClick={() => setShowPicker(!showPicker)}
-            className="w-full border border-gray-200 rounded-xl p-3 text-right bg-white flex items-center justify-between"
+            className="w-full border border-slate-200 rounded-xl p-3 text-right bg-white flex items-center justify-between"
           >
-            <span className="text-sm text-gray-400">בחר משחק...</span>
-            <span className="text-gray-300">▼</span>
+            <span className="text-sm text-slate-400">בחר משחק...</span>
+            <span className="text-slate-300">▼</span>
           </button>
         )}
 
@@ -239,8 +252,16 @@ export default function SellPage() {
             {filteredEvents.map((event) => (
               <button
                 key={event.id}
-                onClick={() => { setSelectedEvent(event); setShowPicker(false); }}
-                className="w-full bg-gray-50 rounded-2xl border border-gray-200 py-2 px-3 flex items-center justify-between flex-row-reverse hover:bg-gray-100 transition-colors"
+                onClick={() => {
+                  setSelectedEvent(event);
+                  setShowPicker(false);
+                  posthog.capture('sell_event_selected', {
+                    event_id: event.id,
+                    home_team: event.home_team,
+                    away_team: event.away_team,
+                  });
+                }}
+                className="w-full bg-slate-50 rounded-2xl border border-slate-200 py-2 px-3 flex items-center justify-between flex-row-reverse hover:bg-slate-100 transition-colors"
               >
                 <div className="flex flex-col items-center gap-0.5 flex-1">
                   <TeamLogo teamName={event.away_team} size={24} />
@@ -266,7 +287,7 @@ export default function SellPage() {
           value={price}
           onChange={(e) => setPrice(e.target.value.replace(/[^0-9]/g, ''))}
           placeholder="0"
-          className="w-full border border-gray-200 rounded-xl p-3 text-right bg-white"
+          className="w-full border border-slate-200 rounded-xl p-3 text-right bg-white"
         />
       </div>
 
@@ -282,7 +303,7 @@ export default function SellPage() {
                 'px-3.5 py-2.5 rounded-full text-[13px] font-medium border transition-colors flex items-center gap-1.5 flex-row-reverse',
                 section === opt
                   ? 'bg-brand text-white border-brand'
-                  : 'bg-gray-50 text-gray-700 border-gray-200 hover:border-brand/50'
+                  : 'bg-slate-50 text-slate-700 border-slate-200 hover:border-brand/50'
               )}
             >
               {opt === 'יציע כסף' && <Star size={14} className={section === opt ? 'text-white' : 'text-brand'} />}
@@ -301,7 +322,7 @@ export default function SellPage() {
             value={rowNumber}
             onChange={(e) => setRowNumber(e.target.value)}
             placeholder="12"
-            className="w-full border border-gray-200 rounded-xl p-3 text-right bg-white"
+            className="w-full border border-slate-200 rounded-xl p-3 text-right bg-white"
           />
         </div>
         <div className="flex-1">
@@ -311,7 +332,7 @@ export default function SellPage() {
             value={seatNumber}
             onChange={(e) => setSeatNumber(e.target.value)}
             placeholder="8"
-            className="w-full border border-gray-200 rounded-xl p-3 text-right bg-white"
+            className="w-full border border-slate-200 rounded-xl p-3 text-right bg-white"
           />
         </div>
       </div>
@@ -324,7 +345,7 @@ export default function SellPage() {
           onChange={(e) => setNotes(e.target.value)}
           placeholder="מידע נוסף על הכרטיס..."
           rows={2}
-          className="w-full border border-gray-200 rounded-xl p-3 text-right bg-white resize-none"
+          className="w-full border border-slate-200 rounded-xl p-3 text-right bg-white resize-none"
         />
       </div>
 

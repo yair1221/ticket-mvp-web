@@ -33,13 +33,13 @@ export default function TeamFilter({ selectedTeam, onSelect }: TeamFilterProps) 
           'w-12 h-12 rounded-full flex items-center justify-center border-2 transition-colors',
           selectedTeam === null
             ? 'border-brand bg-brand/10'
-            : 'border-gray-200 bg-white'
+            : 'border-slate-200 bg-white'
         )}>
-          <Users size={20} className={selectedTeam === null ? 'text-brand' : 'text-gray-400'} />
+          <Users size={20} className={selectedTeam === null ? 'text-brand' : 'text-slate-400'} />
         </div>
         <span className={cn(
           'text-[10px] font-medium whitespace-nowrap',
-          selectedTeam === null ? 'text-brand font-semibold' : 'text-gray-500'
+          selectedTeam === null ? 'text-brand font-semibold' : 'text-slate-500'
         )}>
           הכל
         </span>
@@ -55,14 +55,14 @@ export default function TeamFilter({ selectedTeam, onSelect }: TeamFilterProps) 
           className="flex flex-col items-center gap-1.5 min-w-[60px] transition-all"
         >
           <div className={cn(
-            'w-12 h-12 flex items-center justify-center transition-opacity',
+            'w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center transition-opacity overflow-hidden p-1.5',
             selectedTeam !== null && selectedTeam !== team.name && 'opacity-50'
           )}>
-            <TeamLogo teamName={team.name} size={44} />
+            <TeamLogo teamName={team.name} size={28} />
           </div>
           <span className={cn(
             'text-[10px] font-medium whitespace-nowrap',
-            selectedTeam === team.name ? 'text-brand font-semibold' : 'text-gray-500'
+            selectedTeam === team.name ? 'text-brand font-semibold' : 'text-slate-500'
           )}>
             {team.shortName}
           </span>

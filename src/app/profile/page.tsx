@@ -69,18 +69,18 @@ export default function ProfilePage() {
 
       {/* Avatar + Info */}
       <div className="flex flex-col items-center gap-3 py-6">
-        <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center">
-          <User size={40} className="text-gray-300" />
+        <div className="w-20 h-20 rounded-full bg-slate-100 flex items-center justify-center">
+          <User size={40} className="text-slate-300" />
         </div>
         {user ? (
           <>
             <h2 className="text-lg font-bold">{profile?.name || 'משתמש'}</h2>
-            <p className="text-xs text-gray-500">{profile?.phone}</p>
+            <p className="text-xs text-slate-500">{profile?.phone}</p>
           </>
         ) : (
           <>
             <h2 className="text-lg font-bold">אורח</h2>
-            <p className="text-xs text-gray-500">התחבר כדי לגשת לכל הפיצ&apos;רים</p>
+            <p className="text-xs text-slate-500">התחבר כדי לגשת לכל הפיצ&apos;רים</p>
           </>
         )}
       </div>
@@ -95,34 +95,34 @@ export default function ProfilePage() {
           <LogIn size={20} />
         </Link>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
           <Link
             href="/my-listings"
-            className="flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+            className="flex items-center justify-between p-4 hover:bg-slate-50 transition-colors"
           >
-            <ChevronLeft size={18} className="text-gray-300" />
+            <ChevronLeft size={18} className="text-slate-300" />
             <div className="flex items-center gap-3">
               <span className="text-sm font-medium">הכרטיסים שלי</span>
-              <Ticket size={20} className="text-gray-500" />
+              <Ticket size={20} className="text-slate-500" />
             </div>
           </Link>
         </div>
       )}
 
       {/* General Links */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
         {generalLinks.map((link, i) => (
           <Link
             key={link.label}
             href={link.href!}
-            className={`flex items-center justify-between p-4 hover:bg-gray-50 transition-colors ${
-              i < generalLinks.length - 1 ? 'border-b border-gray-100' : ''
+            className={`flex items-center justify-between p-4 hover:bg-slate-50 transition-colors ${
+              i < generalLinks.length - 1 ? 'border-b border-slate-200' : ''
             }`}
           >
-            <ChevronLeft size={18} className="text-gray-300" />
+            <ChevronLeft size={18} className="text-slate-300" />
             <div className="flex items-center gap-3">
               <span className="text-sm font-medium">{link.label}</span>
-              <span className="text-gray-500">{link.icon}</span>
+              <span className="text-slate-500">{link.icon}</span>
             </div>
           </Link>
         ))}
@@ -130,12 +130,12 @@ export default function ProfilePage() {
 
       {/* Logout */}
       {user && (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+            className="w-full flex items-center justify-between p-4 hover:bg-slate-50 transition-colors"
           >
-            <ChevronLeft size={18} className="text-gray-300" />
+            <ChevronLeft size={18} className="text-slate-300" />
             <div className="flex items-center gap-3">
               <span className="text-sm font-medium text-red-500">התנתק</span>
               <LogOut size={20} className="text-red-500" />
@@ -144,7 +144,7 @@ export default function ProfilePage() {
         </div>
       )}
 
-      <p className="text-center text-[10px] text-gray-400 pb-4">גרסה 1.0.0</p>
+      <p className="text-center text-[10px] text-slate-400 pb-4">גרסה 1.0.0</p>
     </div>
   );
 }

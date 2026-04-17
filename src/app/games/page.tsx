@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { User, Loader2, ArrowUpDown, X } from 'lucide-react';
 import GameCard from '@/components/game/GameCard';
 import SiteLogo from '@/components/shared/SiteLogo';
 import TeamFilter from '@/components/game/TeamFilter';
 import { createClient } from '@/lib/supabase/client';
+import { posthog } from '@/lib/posthog';
 import type { EventWithStats } from '@/lib/types/database';
 
 type SortOption = 'default' | 'date' | 'price';
@@ -85,20 +86,25 @@ export default function GamesPage() {
 
   return (
     <div className="pt-4 space-y-4">
-      {/* Header */}
-      <div className="flex items-center justify-between flex-row-reverse px-4">
-        <Link href="/" className="flex items-center gap-1.5">
-          <SiteLogo />
-          <span className="text-xl font-bold text-brand">TicketIL</span>
-        </Link>
-        <Link href="/profile" className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
-          <User size={20} className="text-gray-400" />
-        </Link>
-      </div>
+      {/* Header + Filter - sticky */}
+      <div className="sticky top-0 z-20 bg-[#F8FAFC] pb-2">
+        <div className="flex items-center justify-between flex-row-reverse px-4 pb-2">
+          <Link href="/" className="flex items-center gap-1.5">
+            <SiteLogo />
+            <span className="text-xl font-bold text-brand">TicketIL</span>
+          </Link>
+          <Link href="/profile" className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
+            <User size={20} className="text-slate-400" />
+          </Link>
+        </div>
 
-      {/* Team Filter */}
-      <div className="px-4">
-        <TeamFilter selectedTeam={selectedTeam} onSelect={setSelectedTeam} />
+        {/* Team Filter */}
+        <div>
+          <TeamFilter selectedTeam={selectedTeam} onSelect={(team) => {
+          setSelectedTeam(team);
+          if (team) posthog.capture('games_filtered', { team_name: team });
+        }} />
+        </div>
       </div>
 
       {/* Results count + sort */}
@@ -110,13 +116,13 @@ export default function GamesPage() {
           <ArrowUpDown size={14} />
           <span>{sortBy === 'default' ? 'מיון' : sortBy === 'date' ? 'תאריך' : 'מחיר'}</span>
         </button>
-        <h2 className="text-[15px] font-bold text-gray-600">נמצאו {sortedEvents.length} משחקים</h2>
+        <h2 className="text-[15px] font-bold text-slate-600">נמצאו {sortedEvents.length} משחקים</h2>
 
         {/* Sort Dropdown */}
         {showSortModal && (
           <>
             <div className="fixed inset-0 z-10" onClick={() => setShowSortModal(false)} />
-            <div className="absolute top-8 left-0 bg-white rounded-xl shadow-lg border border-gray-100 py-1 min-w-[200px] z-20">
+            <div className="absolute top-8 left-0 bg-white rounded-xl shadow-lg border border-slate-200 py-1 min-w-[200px] z-20">
               {([
                 { key: 'default' as const, label: 'הכל' },
                 { key: 'price' as const, label: 'מחיר (מהנמוך לגבוה)' },
@@ -124,13 +130,14 @@ export default function GamesPage() {
               ]).map((option) => (
                 <button
                   key={option.key}
-                  className="w-full flex items-center justify-between px-3.5 py-3 hover:bg-gray-50 transition-colors"
+                  className="w-full flex items-center justify-between px-3.5 py-3 hover:bg-slate-50 transition-colors"
                   onClick={() => {
                     setSortBy(option.key);
                     setShowSortModal(false);
+                    posthog.capture('games_sorted', { sort_type: option.key });
                   }}
                 >
-                  <span className={`text-sm ${sortBy === option.key ? 'text-brand font-semibold' : 'text-gray-700'}`}>
+                  <span className={`text-sm ${sortBy === option.key ? 'text-brand font-semibold' : 'text-slate-700'}`}>
                     {option.label}
                   </span>
                   {sortBy === option.key && <span className="text-brand">✓</span>}
@@ -154,8 +161,8 @@ export default function GamesPage() {
 
           {sortedEvents.length === 0 && (
             <div className="flex flex-col items-center py-12">
-              <X size={48} className="text-gray-300" />
-              <p className="text-sm text-gray-500 mt-2">אין משחקים להצגה</p>
+              <X size={48} className="text-slate-300" />
+              <p className="text-sm text-slate-500 mt-2">אין משחקים להצגה</p>
             </div>
           )}
         </div>

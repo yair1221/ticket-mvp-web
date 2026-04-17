@@ -14,7 +14,7 @@ export default function TrustBadges() {
         return (
           <div key={badge.label} className="flex flex-col items-center gap-1.5">
             <Icon size={24} className={badge.color} />
-            <span className="text-xs font-medium text-gray-600">{badge.label}</span>
+            <span className="text-xs font-medium text-slate-600">{badge.label}</span>
           </div>
         );
       })}

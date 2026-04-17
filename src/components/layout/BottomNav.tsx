@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Home, PlusCircle, HelpCircle, User } from 'lucide-react';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import { cn } from '@/lib/utils/cn';
+import { posthog } from '@/lib/posthog';
 
 const tabs = [
   { href: '/profile', label: 'פרופיל', icon: User },
@@ -18,7 +19,7 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 pb-[env(safe-area-inset-bottom)]">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-slate-200 pb-[env(safe-area-inset-bottom)]">
       <div className="flex items-center justify-around h-16 max-w-lg mx-auto">
         {tabs.map((tab) => {
           const isActive = tab.href === '/'
@@ -30,9 +31,10 @@ export default function BottomNav() {
             <Link
               key={tab.href}
               href={tab.href}
+              onClick={() => posthog.capture('nav_tab_clicked', { tab_name: tab.label, tab_href: tab.href })}
               className={cn(
                 'flex flex-col items-center justify-center gap-1 flex-1 h-full transition-colors',
-                isActive ? 'text-brand' : 'text-gray-400',
+                isActive ? 'text-brand' : 'text-slate-400',
                 tab.highlight && !isActive && 'text-brand'
               )}
             >

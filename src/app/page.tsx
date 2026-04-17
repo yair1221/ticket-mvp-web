@@ -6,6 +6,8 @@ import { User, ShieldCheck, Banknote, Headphones, ArrowLeft, Loader2 } from 'luc
 import GameCard from '@/components/game/GameCard';
 import SiteLogo from '@/components/shared/SiteLogo';
 import { createClient } from '@/lib/supabase/client';
+import { posthog } from '@/lib/posthog';
+import { logError } from '@/lib/logger';
 import type { EventWithStats } from '@/lib/types/database';
 
 export default function HomePage() {
@@ -48,7 +50,7 @@ export default function HomePage() {
         setEvents(eventsWithStats);
       }
     } catch (err) {
-      console.error('Failed to fetch events:', err);
+      logError('home.fetchEvents', err);
     } finally {
       setLoading(false);
     }
@@ -56,6 +58,7 @@ export default function HomePage() {
 
   useEffect(() => {
     fetchEvents();
+    posthog.capture('home_viewed');
   }, [fetchEvents]);
 
   const heroEvent = events[0];
@@ -77,8 +80,8 @@ export default function HomePage() {
           <SiteLogo />
           <span className="text-xl font-bold text-brand">TicketIL</span>
         </Link>
-        <Link href="/profile" className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
-          <User size={20} className="text-gray-400" />
+        <Link href="/profile" className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
+          <User size={20} className="text-slate-400" />
         </Link>
       </div>
 
@@ -94,20 +97,20 @@ export default function HomePage() {
       )}
 
       {/* Trust Section */}
-      <div className="flex items-center justify-around bg-gray-100 rounded-2xl p-4">
+      <div className="flex items-center justify-around bg-slate-100 rounded-2xl p-4">
         <div className="flex flex-col items-center">
           <ShieldCheck size={24} className="text-brand" />
-          <span className="text-[10px] font-medium text-gray-600 mt-1">כרטיסים מאומתים</span>
+          <span className="text-[10px] font-medium text-slate-600 mt-1">כרטיסים מאומתים</span>
         </div>
         <div className="w-px h-8 bg-gray-300" />
         <div className="flex flex-col items-center">
           <Banknote size={24} className="text-brand" />
-          <span className="text-[10px] font-medium text-gray-600 mt-1">ללא עמלות</span>
+          <span className="text-[10px] font-medium text-slate-600 mt-1">ללא עמלות</span>
         </div>
         <div className="w-px h-8 bg-gray-300" />
         <div className="flex flex-col items-center">
           <Headphones size={24} className="text-brand" />
-          <span className="text-[10px] font-medium text-gray-600 mt-1">תמיכה 24/7</span>
+          <span className="text-[10px] font-medium text-slate-600 mt-1">תמיכה 24/7</span>
         </div>
       </div>
 
@@ -136,7 +139,7 @@ export default function HomePage() {
         <div className="flex flex-col items-center justify-center py-20">
           <SiteLogo size={64} />
           <p className="text-xl font-bold">אין אירועים כרגע</p>
-          <p className="text-sm text-gray-500">אירועים חדשים יתווספו בקרוב!</p>
+          <p className="text-sm text-slate-500">אירועים חדשים יתווספו בקרוב!</p>
         </div>
       )}
 

@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 
 const DEMO_MODE = process.env.NEXT_PUBLIC_SUPABASE_URL?.includes('placeholder');
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   if (DEMO_MODE) {
     return NextResponse.next();
   }

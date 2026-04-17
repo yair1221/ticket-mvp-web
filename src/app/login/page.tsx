@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Phone, Loader2, ShieldCheck, Info, UserPlus } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
+import { posthog } from '@/lib/posthog';
 import SiteLogo from '@/components/shared/SiteLogo';
 import { cn } from '@/lib/utils/cn';
 
@@ -17,6 +18,7 @@ export default function LoginPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [consented, setConsented] = useState(false);
   const router = useRouter();
 
   const formatPhone = (p: string) => {
@@ -29,11 +31,17 @@ export default function LoginPage() {
   const handleSendOtp = async () => {
     setLoading(true);
     setError('');
+    posthog.capture('login_started');
 
     const supabase = createClient();
     const { error: err } = await supabase.auth.signInWithOtp({ phone: formatPhone(phone) });
-    if (err) setError(err.message);
-    else setStep('otp');
+    if (err) {
+      setError(err.message);
+      posthog.capture('login_failed', { step: 'otp_send', error: err.message });
+    } else {
+      setStep('otp');
+      posthog.capture('otp_sent');
+    }
     setLoading(false);
   };
 
@@ -55,11 +63,13 @@ export default function LoginPage() {
 
     if (err) {
       setError(err.message);
+      posthog.capture('login_failed', { step: 'otp_verify', error: err.message });
       setLoading(false);
       return;
     }
 
     if (data.user) {
+      posthog.capture('otp_verified');
       setUserId(data.user.id);
 
       // בדיקה אם למשתמש כבר יש שם
@@ -94,6 +104,7 @@ export default function LoginPage() {
       .update({ name: `${firstName.trim()} ${lastName.trim()}` })
       .eq('id', userId);
 
+    posthog.capture('signup_completed');
     setLoading(false);
     navigateAfterLogin();
   };
@@ -111,7 +122,7 @@ export default function LoginPage() {
         {step !== 'name' ? (
           <button
             onClick={handleBack}
-            className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center"
+            className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center"
           >
             <ArrowLeft size={16} className="text-brand" />
           </button>
@@ -128,7 +139,7 @@ export default function LoginPage() {
               <Phone size={32} className="text-brand" />
             </div>
             <h1 className="text-xl font-bold text-center mt-4">אימות מספר טלפון</h1>
-            <p className="text-sm text-gray-500 text-center">נא להזין את מספר הטלפון שלך לאימות החשבון</p>
+            <p className="text-sm text-slate-500 text-center">נא להזין את מספר הטלפון שלך לאימות החשבון</p>
           </div>
 
           <div>
@@ -138,15 +149,35 @@ export default function LoginPage() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder="05X-XXX-XXXX"
-              className="w-full border border-gray-200 rounded-xl p-3.5 text-center text-lg font-semibold bg-white tracking-widest"
+              className="w-full border border-slate-200 rounded-xl p-3.5 text-center text-lg font-semibold bg-white tracking-widest"
               dir="ltr"
             />
           </div>
 
           <div className="flex items-center justify-center gap-2">
-            <Info size={14} className="text-gray-400" />
-            <span className="text-xs text-gray-500">מספר הטלפון ישמש כמזהה הייחודי שלך באפליקציה</span>
+            <Info size={14} className="text-slate-400" />
+            <span className="text-xs text-slate-500">מספר הטלפון ישמש כמזהה הייחודי שלך באפליקציה</span>
           </div>
+
+          <label className="flex items-start gap-2 text-xs text-slate-600 leading-relaxed cursor-pointer select-none">
+            <input
+              type="checkbox"
+              checked={consented}
+              onChange={(e) => setConsented(e.target.checked)}
+              className="mt-0.5 w-4 h-4 accent-brand flex-shrink-0"
+            />
+            <span>
+              קראתי ואני מסכים/ה{' '}
+              <Link href="/terms" className="text-brand font-semibold underline">
+                לתקנון
+              </Link>
+              {' '}ו
+              <Link href="/privacy" className="text-brand font-semibold underline">
+                מדיניות הפרטיות
+              </Link>
+              , ומאשר/ת שמירת מספר הטלפון שלי לאימות.
+            </span>
+          </label>
 
           {error && (
             <div className="flex items-center justify-center gap-1 text-red-500">
@@ -156,10 +187,10 @@ export default function LoginPage() {
 
           <button
             onClick={handleSendOtp}
-            disabled={phone.length < 9 || loading}
+            disabled={phone.length < 9 || loading || !consented}
             className={cn(
               'w-full font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors',
-              phone.length >= 9 && !loading
+              phone.length >= 9 && !loading && consented
                 ? 'bg-brand hover:bg-brand-dark text-white'
                 : 'bg-brand/30 text-white/70 cursor-not-allowed'
             )}
@@ -168,8 +199,8 @@ export default function LoginPage() {
           </button>
 
           <div className="flex items-center justify-center gap-2 mt-4">
-            <ShieldCheck size={14} className="text-gray-300" />
-            <span className="text-[10px] text-gray-400">המספר שלך מאובטח ולא ישותף</span>
+            <ShieldCheck size={14} className="text-slate-300" />
+            <span className="text-[10px] text-slate-400">המספר שלך מאובטח ולא ישותף</span>
           </div>
         </>
       )}
@@ -181,7 +212,7 @@ export default function LoginPage() {
               <Phone size={32} className="text-brand" />
             </div>
             <h1 className="text-xl font-bold text-center mt-4">אימות טלפון</h1>
-            <p className="text-sm text-gray-500 text-center">הזן את הקוד בן 6 הספרות שנשלח אל</p>
+            <p className="text-sm text-slate-500 text-center">הזן את הקוד בן 6 הספרות שנשלח אל</p>
             <p className="text-base font-semibold">{phone}</p>
           </div>
 
@@ -191,7 +222,7 @@ export default function LoginPage() {
             value={otp}
             onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 6))}
             placeholder="000000"
-            className="w-full border border-gray-200 rounded-xl p-3.5 text-center text-xl font-bold bg-gray-50 tracking-[0.5em]"
+            className="w-full border border-slate-200 rounded-xl p-3.5 text-center text-xl font-bold bg-slate-50 tracking-[0.5em]"
             dir="ltr"
             autoFocus
           />
@@ -216,7 +247,7 @@ export default function LoginPage() {
           </button>
 
           <div className="flex items-center justify-center gap-1">
-            <span className="text-xs text-gray-500">לא קיבלת קוד?</span>
+            <span className="text-xs text-slate-500">לא קיבלת קוד?</span>
             <button onClick={handleSendOtp} className="text-xs font-semibold text-brand">
               שלח שוב
             </button>
@@ -231,7 +262,7 @@ export default function LoginPage() {
               <UserPlus size={32} className="text-brand" />
             </div>
             <h1 className="text-xl font-bold text-center mt-4">ברוך הבא!</h1>
-            <p className="text-sm text-gray-500 text-center">הזן את שמך כדי להשלים את ההרשמה</p>
+            <p className="text-sm text-slate-500 text-center">הזן את שמך כדי להשלים את ההרשמה</p>
           </div>
 
           <div className="space-y-3">
@@ -242,7 +273,7 @@ export default function LoginPage() {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 placeholder="ישראל"
-                className="w-full border border-gray-200 rounded-xl p-3.5 text-right bg-white"
+                className="w-full border border-slate-200 rounded-xl p-3.5 text-right bg-white"
                 autoFocus
               />
             </div>
@@ -253,7 +284,7 @@ export default function LoginPage() {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 placeholder="ישראלי"
-                className="w-full border border-gray-200 rounded-xl p-3.5 text-right bg-white"
+                className="w-full border border-slate-200 rounded-xl p-3.5 text-right bg-white"
               />
             </div>
           </div>

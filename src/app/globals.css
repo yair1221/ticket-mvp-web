@@ -4,7 +4,9 @@
   --color-brand: #2563EB;
   --color-brand-light: #DBEAFE;
   --color-brand-dark: #1D4ED8;
-  --color-verified: #22C55E;
+  --color-verified: #16A34A;
+  --color-success-light: #DCFCE7;
+  --color-error: #DC2626;
   --color-demand: #F97316;
 }
 
@@ -14,8 +16,8 @@
 
 body {
   font-family: 'Assistant', sans-serif;
-  background: #f8f9fa;
-  color: #1a1a2e;
+  background: #F8FAFC;
+  color: #1E293B;
   -webkit-font-smoothing: antialiased;
   direction: rtl;
   text-align: right;
@@ -41,4 +43,56 @@ h1.text-center, h2.text-center, h3.text-center {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Accessibility - High Contrast */
+.a11y-high-contrast body {
+  background: #000 !important;
+  color: #fff !important;
+}
+.a11y-high-contrast .bg-white,
+.a11y-high-contrast .bg-slate-50,
+.a11y-high-contrast .bg-slate-100 {
+  background-color: #1a1a1a !important;
+}
+.a11y-high-contrast .text-slate-400,
+.a11y-high-contrast .text-slate-500,
+.a11y-high-contrast .text-slate-600,
+.a11y-high-contrast .text-slate-700 {
+  color: #e0e0e0 !important;
+}
+.a11y-high-contrast .border-slate-200 {
+  border-color: #555 !important;
+}
+
+/* Accessibility - Highlight Links */
+.a11y-highlight-links a {
+  outline: 2px solid #2563EB !important;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Accessibility - Underline Links */
+.a11y-underline-links a {
+  text-decoration: underline !important;
+}
+
+/* Accessibility - Stop Animations */
+.a11y-stop-animations *,
+.a11y-stop-animations *::before,
+.a11y-stop-animations *::after {
+  animation-duration: 0s !important;
+  transition-duration: 0s !important;
+}
+
+/* Accessibility - Big Cursor */
+.a11y-big-cursor,
+.a11y-big-cursor * {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cpath d='M5 2l18 14-10 2 6 12-4 2-6-12-4 10z' fill='%23000' stroke='%23fff' stroke-width='1.5'/%3E%3C/svg%3E") 4 2, auto !important;
+}
+
+/* Accessibility - Readable Font */
+.a11y-readable-font * {
+  font-family: Arial, Helvetica, sans-serif !important;
+  letter-spacing: 0.03em !important;
 }

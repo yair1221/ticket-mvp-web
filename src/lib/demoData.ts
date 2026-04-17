@@ -65,10 +65,19 @@ const demoEvents: Event[] = [
   },
 ];
 
+const DEMO_STATS = [
+  { listing_count: 5, min_price: 120 },
+  { listing_count: 3, min_price: 90 },
+  { listing_count: 8, min_price: 80 },
+  { listing_count: 2, min_price: 150 },
+  { listing_count: 12, min_price: 200 },
+  { listing_count: 1, min_price: 70 },
+] as const;
+
 export const demoEventsWithStats: EventWithStats[] = demoEvents.map((event, i) => ({
   ...event,
-  listing_count: [5, 3, 8, 2, 12, 1][i],
-  min_price: [120, 90, 80, 150, 200, 70][i],
+  listing_count: DEMO_STATS[i]?.listing_count ?? 0,
+  min_price: DEMO_STATS[i]?.min_price ?? null,
 }));
 
 export function getDemoEvent(id: string): Event | undefined {

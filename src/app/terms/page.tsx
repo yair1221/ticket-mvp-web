@@ -36,8 +36,8 @@ export default function TermsPage() {
   return (
     <div className="pt-4">
       {/* Header */}
-      <div className="flex items-center justify-between px-4 pb-4 border-b border-gray-100">
-        <button onClick={() => router.back()} className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
+      <div className="flex items-center justify-between px-4 pb-4 border-b border-slate-200">
+        <button onClick={() => router.back()} className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
           <ArrowLeft size={16} className="text-brand" />
         </button>
         <h1 className="text-lg font-bold flex-1 text-center">תקנון שימוש</h1>
@@ -45,11 +45,19 @@ export default function TermsPage() {
       </div>
 
       {/* Intro */}
-      <div className="bg-gray-50 p-4 text-center">
-        <p className="text-sm font-bold text-brand mb-3">עודכן לאחרונה: ינואר 2024</p>
-        <p className="text-sm text-gray-600 leading-relaxed">
+      <div className="bg-slate-50 p-4 text-center">
+        <p className="text-sm font-bold text-brand mb-3">עודכן לאחרונה: אפריל 2026</p>
+        <p className="text-sm text-slate-600 leading-relaxed">
           ברוכים הבאים לפלטפורמת הכרטיסים המאובטחת של אוהדי הספורט בישראל. השימוש באפליקציה כפוף לתנאים המפורטים להלן.
+          <br />
+          TicketIL היא פלטפורמת קישור בלבד — אנו לא אחראים לעסקאות, לתשלומים ולאספקת הכרטיס בפועל.
         </p>
+        <Link
+          href="/privacy"
+          className="inline-block mt-3 text-xs text-brand font-semibold underline"
+        >
+          מדיניות פרטיות ←
+        </Link>
       </div>
 
       {/* Sections */}
@@ -59,7 +67,7 @@ export default function TermsPage() {
             key={i}
             onClick={() => setExpanded(expanded === i ? null : i)}
             className={`w-full text-right bg-white rounded-xl p-4 border transition-colors ${
-              expanded === i ? 'border-brand border-1.5' : 'border-gray-200'
+              expanded === i ? 'border-brand border-1.5' : 'border-slate-200'
             }`}
           >
             <div className="flex items-center justify-between">
@@ -68,13 +76,13 @@ export default function TermsPage() {
                 <span className="text-base font-bold">{sec.title}</span>
               </div>
               {expanded === i ? (
-                <ChevronUp size={20} className="text-gray-400" />
+                <ChevronUp size={20} className="text-slate-400" />
               ) : (
-                <ChevronDown size={20} className="text-gray-400" />
+                <ChevronDown size={20} className="text-slate-400" />
               )}
             </div>
             {expanded === i && (
-              <p className="text-sm text-gray-600 leading-7 mt-3 pt-3 border-t border-gray-100 whitespace-pre-line">
+              <p className="text-sm text-slate-600 leading-7 mt-3 pt-3 border-t border-slate-200 whitespace-pre-line">
                 {sec.content}
               </p>
             )}
@@ -85,8 +93,8 @@ export default function TermsPage() {
       {/* Contact CTA */}
       <div className="px-4 pb-4">
         <h3 className="text-base font-bold text-right mb-2">יצירת קשר ודיווח</h3>
-        <div className="bg-gray-100 rounded-xl p-4 text-center">
-          <p className="text-sm text-gray-600 leading-relaxed mb-4">
+        <div className="bg-slate-100 rounded-xl p-4 text-center">
+          <p className="text-sm text-slate-600 leading-relaxed mb-4">
             נתקלתם בבעיה? יש לכם שאלה לגבי התקנון? צוות התמיכה שלנו זמין עבורכם.
           </p>
           <Link

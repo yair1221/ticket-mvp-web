@@ -3,12 +3,14 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { ArrowLeft, MapPin, Calendar, Clock, Loader2, Ticket } from 'lucide-react';
+import { ArrowLeft, MapPin, Calendar, Loader2, Ticket } from 'lucide-react';
 import TeamLogo from '@/components/shared/TeamLogo';
 import TicketCard from '@/components/game/TicketCard';
 import ShareButton from '@/components/game/ShareButton';
 import { formatEventDate, formatEventTime } from '@/lib/utils/format';
 import { createClient } from '@/lib/supabase/client';
+import { posthog } from '@/lib/posthog';
+import { logError } from '@/lib/logger';
 import { SECTION_OPTIONS } from '@/lib/constants/stands';
 import { cn } from '@/lib/utils/cn';
 import type { Event, ListingWithSeller } from '@/lib/types/database';
@@ -32,6 +34,11 @@ export default function GameDetailsPage() {
 
         if (eventData) {
           setEvent(eventData);
+          posthog.capture('game_detail_viewed', {
+            game_id: gameId,
+            home_team: eventData.home_team,
+            away_team: eventData.away_team,
+          });
           const { data: listingsData } = await supabase
             .from('listings')
             .select('*, profiles(name, phone, whatsapp)')
@@ -41,7 +48,7 @@ export default function GameDetailsPage() {
           setListings(listingsData || []);
         }
       } catch (err) {
-        console.error('Failed to fetch game:', err);
+        logError('game.fetchData', err, { gameId });
       } finally {
         setLoading(false);
       }
@@ -60,7 +67,7 @@ export default function GameDetailsPage() {
   if (!event) {
     return (
       <div className="px-4 pt-4 text-center py-20">
-        <p className="text-gray-500">האירוע לא נמצא</p>
+        <p className="text-slate-500">האירוע לא נמצא</p>
         <Link href="/games" className="text-brand font-medium mt-4 inline-block">חזרה למשחקים</Link>
       </div>
     );
@@ -70,7 +77,7 @@ export default function GameDetailsPage() {
     <div className="px-4 pt-4 pb-6 space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <Link href="/games" className="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center">
+        <Link href="/games" className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
           <ArrowLeft size={16} className="text-brand" />
         </Link>
         <h1 className="text-base font-bold flex-1 text-center">פרטי המשחק</h1>
@@ -89,12 +96,12 @@ export default function GameDetailsPage() {
             <div className="flex flex-col items-center gap-1.5 flex-1">
               <TeamLogo teamName={event.away_team} size={56} />
               <span className="text-sm font-bold text-center leading-tight">{event.away_team}</span>
-              <span className="text-[10px] text-gray-400 font-semibold">(חוץ)</span>
+              <span className="text-[10px] text-slate-400 font-semibold">(חוץ)</span>
             </div>
 
             {/* VS + Time */}
             <div className="flex flex-col items-center gap-1 px-3">
-              <span className="text-xs font-bold text-gray-300">VS</span>
+              <span className="text-xs font-bold text-slate-300">VS</span>
               <span className="text-2xl font-medium text-gray-900">{formatEventTime(event.time)}</span>
             </div>
 
@@ -108,7 +115,7 @@ export default function GameDetailsPage() {
         </div>
 
         {/* Info Bar */}
-        <div className="px-2 py-2 flex items-center text-[13px] text-gray-500">
+        <div className="px-2 py-2 flex items-center text-[13px] text-slate-500">
           <div className="flex-1 flex items-center justify-center gap-1.5">
             <Calendar size={14} className="text-brand" />
             <span className="font-medium">{formatEventDate(event.date)}</span>
@@ -123,12 +130,15 @@ export default function GameDetailsPage() {
         {/* Section Filter */}
         <div className="flex gap-2 overflow-x-auto no-scrollbar px-1 py-2 flex-row-reverse">
           <button
-            onClick={() => setSelectedSection(null)}
+            onClick={() => {
+              setSelectedSection(null);
+              posthog.capture('section_filter_clicked', { section: 'all' });
+            }}
             className={cn(
               'px-3 py-1.5 rounded-full text-xs font-medium border whitespace-nowrap transition-colors',
               selectedSection === null
                 ? 'bg-brand text-white border-brand'
-                : 'bg-white text-gray-600 border-gray-200'
+                : 'bg-white text-slate-600 border-slate-200'
             )}
           >
             הכל
@@ -136,12 +146,16 @@ export default function GameDetailsPage() {
           {[...SECTION_OPTIONS].reverse().map((opt) => (
             <button
               key={opt}
-              onClick={() => setSelectedSection(selectedSection === opt ? null : opt)}
+              onClick={() => {
+                const newSection = selectedSection === opt ? null : opt;
+                setSelectedSection(newSection);
+                posthog.capture('section_filter_clicked', { section: newSection || 'all' });
+              }}
               className={cn(
                 'px-3 py-1.5 rounded-full text-xs font-medium border whitespace-nowrap transition-colors',
                 selectedSection === opt
                   ? 'bg-brand text-white border-brand'
-                  : 'bg-white text-gray-600 border-gray-200'
+                  : 'bg-white text-slate-600 border-slate-200'
               )}
             >
               {opt}
@@ -153,7 +167,7 @@ export default function GameDetailsPage() {
       {/* Listings Section */}
       <div>
         <div className="flex items-center justify-between mb-3">
-          <span className="text-[11px] text-gray-400">מהמחיר הנמוך לגבוה</span>
+          <span className="text-[11px] text-slate-400">מהמחיר הנמוך לגבוה</span>
           <h2 className="text-sm font-bold">כרטיסים זמינים ({selectedSection ? listings.filter(l => l.section === selectedSection).length : listings.length})</h2>
         </div>
 
@@ -172,9 +186,9 @@ export default function GameDetailsPage() {
               ))}
           </div>
         ) : (
-          <div className="bg-white rounded-2xl p-10 text-center border border-gray-100 shadow-sm">
+          <div className="bg-white rounded-2xl p-10 text-center border border-slate-200 shadow-sm">
             <Ticket size={44} className="text-gray-200 mx-auto" />
-            <p className="text-sm text-gray-400 mt-3">אין כרטיסים זמינים כרגע</p>
+            <p className="text-sm text-slate-400 mt-3">אין כרטיסים זמינים כרגע</p>
             <Link
               href="/sell"
               className="inline-block bg-brand text-white text-sm font-bold px-6 py-2.5 rounded-xl mt-4 hover:bg-brand-dark transition-colors"
