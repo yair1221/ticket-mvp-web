@@ -27,6 +27,11 @@ export default function LoginPage() {
     return clean;
   };
 
+  const isValidIsraeliMobile = (p: string) => {
+    const clean = p.replace(/[-\s]/g, '');
+    return /^0?5\d{8}$/.test(clean) || /^\+9725\d{8}$/.test(clean);
+  };
+
   const handleSendOtp = async () => {
     setLoading(true);
     setError('');
@@ -146,8 +151,9 @@ export default function LoginPage() {
             <input
               type="tel"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => setPhone(e.target.value.replace(/[^\d+\-\s]/g, '').slice(0, 15))}
               placeholder="05X-XXX-XXXX"
+              maxLength={15}
               className="w-full border border-slate-200 rounded-xl p-3.5 text-center text-lg font-semibold bg-white tracking-widest"
               dir="ltr"
             />
@@ -166,10 +172,10 @@ export default function LoginPage() {
 
           <button
             onClick={handleSendOtp}
-            disabled={phone.length < 9 || loading}
+            disabled={!isValidIsraeliMobile(phone) || loading}
             className={cn(
               'w-full font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors',
-              phone.length >= 9 && !loading
+              isValidIsraeliMobile(phone) && !loading
                 ? 'bg-brand hover:bg-brand-dark text-white'
                 : 'bg-brand/30 text-white/70 cursor-not-allowed'
             )}

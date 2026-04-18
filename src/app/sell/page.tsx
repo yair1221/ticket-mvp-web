@@ -281,7 +281,12 @@ export default function SellPage() {
           type="text"
           inputMode="numeric"
           value={price}
-          onChange={(e) => setPrice(e.target.value.replace(/[^0-9]/g, ''))}
+          onChange={(e) => {
+            const digits = e.target.value.replace(/[^0-9]/g, '');
+            const capped = digits ? Math.min(Number(digits), 5000).toString() : '';
+            setPrice(capped);
+          }}
+          maxLength={4}
           placeholder="0"
           className="w-full border border-slate-200 rounded-xl p-3 text-right bg-white"
         />
@@ -319,6 +324,7 @@ export default function SellPage() {
             type="text"
             value={rowNumber}
             onChange={(e) => setRowNumber(e.target.value)}
+            maxLength={10}
             placeholder="12"
             className="w-full border border-slate-200 rounded-xl p-3 text-right bg-white"
           />
@@ -331,6 +337,7 @@ export default function SellPage() {
             type="text"
             value={seatNumber}
             onChange={(e) => setSeatNumber(e.target.value)}
+            maxLength={10}
             placeholder="8"
             className="w-full border border-slate-200 rounded-xl p-3 text-right bg-white"
           />
@@ -344,7 +351,8 @@ export default function SellPage() {
         </label>
         <textarea
           value={notes}
-          onChange={(e) => setNotes(e.target.value)}
+          onChange={(e) => setNotes(e.target.value.slice(0, 500))}
+          maxLength={500}
           placeholder="מידע נוסף על הכרטיס..."
           rows={2}
           className="w-full border border-slate-200 rounded-xl p-3 text-right bg-white resize-none"
