@@ -16,7 +16,7 @@ const buyerSteps = [
   {
     number: 2,
     title: 'בחר כרטיס',
-    description: 'עיין בכרטיסים הזמינים, סנן לפי יציע ומצא את המחיר הטוב ביותר.',
+    description: 'עיין בכרטיסים הזמינים, סנן לפי יציע ומצא את הכרטיס הטוב עבורך.',
     icon: Ticket,
   },
   {
@@ -42,14 +42,14 @@ const sellerSteps = [
   },
   {
     number: 2,
-    title: 'הזן פרטים',
-    description: 'מלא מחיר, יציע, שורה וכסא. אתה יכול למלא לפני התחברות.',
+    title: 'הזן פרטי הכרטיס',
+    description: 'מלא את פרטי הכרטיס שלך ואת המחיר המבוקש.',
     icon: Tag,
   },
   {
     number: 3,
     title: 'אמת את הזהות',
-    description: 'התחבר עם מספר טלפון וקוד SMS. הכרטיס יפורסם אוטומטית.',
+    description: 'התחבר עם מספר טלפון וקוד SMS.',
     icon: Phone,
   },
   {
@@ -64,10 +64,6 @@ const buyerFAQ = [
   {
     q: 'האם יש עמלה על רכישת כרטיס?',
     a: 'לא! TicketIL לא גובה עמלות. התשלום מתבצע ישירות בין הקונה למוכר.',
-  },
-  {
-    q: 'איך אני יודע שהכרטיס אמיתי?',
-    a: 'כל המוכרים באתר מאומתים באמצעות מספר טלפון. מומלץ לבקש מהמוכר תמונה של הכרטיס לפני הרכישה.',
   },
   {
     q: 'איך מתבצע התשלום?',
@@ -94,7 +90,7 @@ const sellerFAQ = [
   },
   {
     q: 'מה קורה אחרי שהמשחק עובר?',
-    a: 'כרטיסים של משחקים שכבר התקיימו מוסרים אוטומטית מהאתר.',
+    a: 'כרטיסים של משחקים שכבר התקיימו לא יוצגו עוד לקונים באתר - הם פשוט לא יופיעו בחיפושים. אתה תמיד יכול להיכנס ל"הכרטיסים שלי" כדי לראות את ההיסטוריה שלך.',
   },
   {
     q: 'איך אני מסמן שכרטיס נמכר?',
@@ -103,6 +99,14 @@ const sellerFAQ = [
   {
     q: 'האם צריך להתחבר כדי לפרסם?',
     a: 'אתה יכול למלא את כל הפרטים בלי להתחבר. רק בלחיצה על "פרסם" תתבקש להזדהות עם מספר טלפון.',
+  },
+  {
+    q: 'איך מעלים כרטיס, שלב אחר שלב?',
+    a: '1. לחץ על "מכור" בתפריט התחתון.\n2. בחר את המשחק מתוך רשימת המשחקים הקרובים.\n3. מלא מחיר, יציע, שורה וכסא (שורה וכסא אופציונליים).\n4. לחץ "פרסם". אם עדיין לא התחברת - תועבר להזדהות בקוד SMS, והפרטים שמילאת יישמרו אוטומטית.\n5. אחרי ההזדהות הכרטיס יפורסם מיד ויופיע לקונים.',
+  },
+  {
+    q: 'איך אני מוחק כרטיס שאני כבר לא רוצה למכור?',
+    a: 'היכנס ל"הכרטיסים שלי" מהתפריט, מצא את הכרטיס ולחץ על "הסר". הכרטיס יוסר מיידית מהחיפושים. אם הכרטיס נמכר בפועל ואתה רוצה להשאיר אותו בהיסטוריה - השתמש ב"סמן כנמכר" במקום.',
   },
 ];
 
@@ -152,7 +156,7 @@ export default function HowItWorksPage() {
 
       {/* Steps */}
       <div className="p-4">
-        <h2 className="text-base font-bold text-right mb-3">
+        <h2 className="text-lg font-bold text-right mb-4">
           {tab === 'buyer' ? '4 צעדים לקניית כרטיס' : '4 צעדים למכירת כרטיס'}
         </h2>
 
@@ -160,25 +164,25 @@ export default function HowItWorksPage() {
           const Icon = step.icon;
           return (
             <div key={step.number}>
-              <div className="flex items-center justify-end mb-1.5 pr-1">
-                <span className="text-[10px] font-bold bg-brand text-white px-2 py-0.5 rounded-full">
+              <div className="flex items-center justify-end mb-2 pr-1">
+                <span className="text-xs font-bold bg-brand text-white px-3 py-1 rounded-full">
                   שלב {step.number}
                 </span>
               </div>
-              <div className="bg-white rounded-xl border border-slate-200 p-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-11 h-11 rounded-xl bg-brand/10 flex items-center justify-center shrink-0">
-                    <Icon size={22} className="text-brand" />
+              <div className="bg-white rounded-2xl border border-slate-200 p-5">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-brand/10 flex items-center justify-center shrink-0">
+                    <Icon size={28} className="text-brand" />
                   </div>
                   <div className="flex-1 text-right">
-                    <span className="text-base font-bold">{step.title}</span>
-                    <p className="text-sm text-slate-500 leading-relaxed mt-0.5">{step.description}</p>
+                    <span className="text-lg font-bold">{step.title}</span>
+                    <p className="text-base text-slate-500 leading-relaxed mt-1">{step.description}</p>
                   </div>
                 </div>
               </div>
               {i < steps.length - 1 && (
-                <div className="flex justify-center py-1">
-                  <ChevronDown size={28} className="text-brand" />
+                <div className="flex justify-center py-2">
+                  <ChevronDown size={32} className="text-brand" />
                 </div>
               )}
             </div>
@@ -222,20 +226,20 @@ export default function HowItWorksPage() {
       </div>
 
       {/* Trust */}
-      <div className="flex items-center justify-around bg-slate-50 mx-4 mb-4 p-4 rounded-2xl">
+      <div className="flex items-center justify-around bg-slate-100 mx-4 mb-4 p-4 rounded-2xl">
         <div className="flex flex-col items-center">
           <ShieldCheck size={24} className="text-brand" />
-          <span className="text-[10px] font-semibold text-slate-600 mt-1">כרטיסים מאומתים</span>
+          <span className="text-[10px] font-medium text-slate-600 mt-1">כרטיסים מאומתים</span>
         </div>
-        <div className="w-px h-8 bg-slate-200" />
+        <div className="w-px h-8 bg-gray-300" />
         <div className="flex flex-col items-center">
           <Banknote size={24} className="text-brand" />
-          <span className="text-[10px] font-semibold text-slate-600 mt-1">ללא עמלות</span>
+          <span className="text-[10px] font-medium text-slate-600 mt-1">ללא עמלות</span>
         </div>
-        <div className="w-px h-8 bg-slate-200" />
+        <div className="w-px h-8 bg-gray-300" />
         <div className="flex flex-col items-center">
           <Headphones size={24} className="text-brand" />
-          <span className="text-[10px] font-semibold text-slate-600 mt-1">תמיכה 24/7</span>
+          <span className="text-[10px] font-medium text-slate-600 mt-1">תמיכה 24/7</span>
         </div>
       </div>
     </div>

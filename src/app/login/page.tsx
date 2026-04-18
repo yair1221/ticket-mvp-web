@@ -18,7 +18,6 @@ export default function LoginPage() {
   const [userId, setUserId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [consented, setConsented] = useState(false);
   const router = useRouter();
 
   const formatPhone = (p: string) => {
@@ -122,9 +121,9 @@ export default function LoginPage() {
         {step !== 'name' ? (
           <button
             onClick={handleBack}
-            className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center"
+            className="w-11 h-11 rounded-full bg-slate-100 flex items-center justify-center"
           >
-            <ArrowLeft size={16} className="text-brand" />
+            <ArrowLeft size={20} className="text-brand" />
           </button>
         ) : (
           <div className="w-9" />
@@ -159,26 +158,6 @@ export default function LoginPage() {
             <span className="text-xs text-slate-500">מספר הטלפון ישמש כמזהה הייחודי שלך באפליקציה</span>
           </div>
 
-          <label className="flex items-start gap-2 text-xs text-slate-600 leading-relaxed cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={consented}
-              onChange={(e) => setConsented(e.target.checked)}
-              className="mt-0.5 w-4 h-4 accent-brand flex-shrink-0"
-            />
-            <span>
-              קראתי ואני מסכים/ה{' '}
-              <Link href="/terms" className="text-brand font-semibold underline">
-                לתקנון
-              </Link>
-              {' '}ו
-              <Link href="/privacy" className="text-brand font-semibold underline">
-                מדיניות הפרטיות
-              </Link>
-              , ומאשר/ת שמירת מספר הטלפון שלי לאימות.
-            </span>
-          </label>
-
           {error && (
             <div className="flex items-center justify-center gap-1 text-red-500">
               <span className="text-xs">{error}</span>
@@ -187,16 +166,28 @@ export default function LoginPage() {
 
           <button
             onClick={handleSendOtp}
-            disabled={phone.length < 9 || loading || !consented}
+            disabled={phone.length < 9 || loading}
             className={cn(
               'w-full font-bold py-3.5 rounded-xl flex items-center justify-center gap-2 transition-colors',
-              phone.length >= 9 && !loading && consented
+              phone.length >= 9 && !loading
                 ? 'bg-brand hover:bg-brand-dark text-white'
                 : 'bg-brand/30 text-white/70 cursor-not-allowed'
             )}
           >
             {loading ? <Loader2 size={20} className="animate-spin" /> : <span>שלח קוד אימות</span>}
           </button>
+
+          <p className="text-[11px] text-slate-500 text-center leading-relaxed px-2">
+            בלחיצה על &quot;שלח קוד אימות&quot; אתה מאשר את{' '}
+            <Link href="/terms" className="text-brand font-semibold underline">
+              תקנון השימוש
+            </Link>
+            {' '}ו-
+            <Link href="/privacy" className="text-brand font-semibold underline">
+              מדיניות הפרטיות
+            </Link>
+            , ומסכים לשמירת מספר הטלפון שלך לאימות.
+          </p>
 
           <div className="flex items-center justify-center gap-2 mt-4">
             <ShieldCheck size={14} className="text-slate-300" />

@@ -13,9 +13,9 @@ export default function PrivacyPage() {
       <div className="flex items-center justify-between px-4 pb-4 border-b border-slate-200">
         <button
           onClick={() => router.back()}
-          className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center"
+          className="w-11 h-11 rounded-full bg-slate-100 flex items-center justify-center"
         >
-          <ArrowLeft size={16} className="text-brand" />
+          <ArrowLeft size={20} className="text-brand" />
         </button>
         <h1 className="text-lg font-bold flex-1 text-center">מדיניות פרטיות</h1>
         <Link href="/">

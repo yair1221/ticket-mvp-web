@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Headphones, MessageCircle, Phone, Mail, Send, Loader2 } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Mail, Send, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import SiteLogo from '@/components/shared/SiteLogo';
 import { logError } from '@/lib/logger';
@@ -47,8 +47,8 @@ export default function SupportPage() {
     <div className="pt-4">
       {/* Header */}
       <div className="flex items-center justify-between px-4 pb-4 border-b border-slate-200">
-        <button onClick={() => router.back()} className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
-          <ArrowLeft size={16} className="text-brand" />
+        <button onClick={() => router.back()} className="w-11 h-11 rounded-full bg-slate-100 flex items-center justify-center">
+          <ArrowLeft size={20} className="text-brand" />
         </button>
         <h1 className="text-lg font-bold flex-1 text-center">תמיכה</h1>
         <Link href="/"><SiteLogo /></Link>
@@ -57,51 +57,35 @@ export default function SupportPage() {
       {/* Hero */}
       <div className="bg-slate-100 px-4 py-8 text-center">
         <div className="w-20 h-20 rounded-full bg-brand flex items-center justify-center mx-auto mb-4">
-          <Headphones size={40} className="text-white" />
+          <MessageCircle size={40} className="text-white" />
         </div>
-        <h2 className="text-xl font-bold mb-2">אנחנו כאן בשבילך</h2>
+        <h2 className="text-xl font-bold mb-2">צ&apos;אט זמין 24/7</h2>
         <p className="text-sm text-slate-600 leading-relaxed">
-          נתקלת בבעיה? יש לך שאלה לגבי כרטיס? הצוות שלנו זמין לעזור בכל נושא.
+          שלחו לנו פנייה בטופס למטה ונחזור אליכם בהקדם.
         </p>
-      </div>
-
-      {/* Quick Contact */}
-      <div className="p-4">
-        <h3 className="text-base font-bold text-right mb-3">יצירת קשר מהיר</h3>
-        <div className="flex gap-3">
-          <div className="flex-1 bg-white rounded-xl border border-slate-200 p-4 text-center">
-            <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-2">
-              <MessageCircle size={24} className="text-brand" />
-            </div>
-            <p className="text-sm font-bold">צ&apos;אט נציג</p>
-            <p className="text-xs text-slate-500">זמין 24/7</p>
-          </div>
-          <div className="flex-1 bg-white rounded-xl border border-slate-200 p-4 text-center">
-            <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-2">
-              <Phone size={24} className="text-brand" />
-            </div>
-            <p className="text-sm font-bold">מוקד טלפוני</p>
-            <p className="text-xs text-slate-500">09:00 - 18:00</p>
-          </div>
-        </div>
       </div>
 
       {/* Form */}
       <div className="mx-4 mb-4 bg-white rounded-2xl p-4">
-        <div className="flex items-center gap-2 mb-4">
-          <Mail size={20} className="text-brand" />
+        <div className="flex items-center justify-end gap-2 mb-4">
           <h3 className="text-base font-bold">שלחו לנו פנייה</h3>
+          <Mail size={20} className="text-brand" />
         </div>
 
-        <label className="block text-xs font-medium mb-2">נושא הפנייה</label>
+        <label className="block text-xs font-medium mb-2 text-right">נושא הפנייה</label>
         <select
           value={subject}
           onChange={(e) => setSubject(e.target.value)}
-          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm mb-4 appearance-none"
+          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm mb-4 appearance-none text-right"
         >
           <option>בעיה ברכישת כרטיס</option>
           <option>בעיה במכירת כרטיס</option>
           <option>בעיה בהתחברות</option>
+          <option>בעיה טכנית באתר</option>
+          <option>דיווח על מודעה מפרה / חשודה</option>
+          <option>בקשה למחיקת חשבון</option>
+          <option>שאלה על התקנון / מדיניות פרטיות</option>
+          <option>הצעה לשיפור</option>
           <option>אחר</option>
         </select>
 
@@ -150,8 +134,8 @@ export default function SupportPage() {
       {/* Footer */}
       <div className="text-center py-4">
         <p className="text-xs text-slate-500">ניתן גם לשלוח מייל ישירות לכתובת:</p>
-        <a href="mailto:support@ticketil.com" className="text-sm font-semibold text-brand">
-          support@ticketil.com
+        <a href="mailto:ticketil.x@gmail.com" className="text-sm font-semibold text-brand">
+          ticketil.x@gmail.com
         </a>
       </div>
     </div>

@@ -3,60 +3,167 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Info, Tag, ArrowLeftRight, XCircle, ChevronDown, ChevronUp, Mail } from 'lucide-react';
+import {
+  ArrowLeft,
+  Info,
+  Users,
+  Tag,
+  ShoppingCart,
+  CreditCard,
+  Ban,
+  ShieldAlert,
+  Scale,
+  FileText,
+  Lock,
+  AlertTriangle,
+  RefreshCw,
+  Gavel,
+  Mail,
+  ChevronDown,
+  ChevronUp,
+} from 'lucide-react';
 import SiteLogo from '@/components/shared/SiteLogo';
 
-const sections = [
+type Section = { icon: React.ReactNode; title: string; content: string };
+
+const sections: Section[] = [
   {
     icon: <Info size={20} />,
-    title: 'מבוא והגדרות',
-    content: 'Ticketil היא פלטפורמה המקשרת בין מוכרי כרטיסים לספורט לבין קונים פוטנציאליים. האתר אינו מבצע עסקאות ואינו אחראי לתשלומים בין הצדדים.',
+    title: '1. מבוא והגדרות',
+    content:
+      'ברוכים הבאים ל-TicketIL (להלן: "האתר" או "השירות"). תקנון זה קובע את התנאים המשפטיים לשימוש בשירות. השימוש מהווה הסכמה מלאה לתקנון.\n\nהגדרות:\n• "המפעילה" / "אנחנו" — TicketIL, מפעילת השירות.\n• "משתמש" — כל אדם הגולש באתר, מוכר או קונה.\n• "מוכר" — משתמש שמפרסם כרטיס למכירה.\n• "קונה" — משתמש שיוצר קשר עם מוכר לרכישת כרטיס.\n• "כרטיס" — כרטיס לאירוע ספורט שהמוכר מציע למכירה.\n• "אירוע" — משחק ספורט המופיע באתר.',
+  },
+  {
+    icon: <Users size={20} />,
+    title: '2. כשירות ותנאי שימוש',
+    content:
+      '• השימוש בשירות מותר למשתמשים מעל גיל 18, או למי שקיבל אישור מהורה/אפוטרופוס.\n• המשתמש מתחייב לספק פרטים נכונים, עדכניים ומלאים בתהליך ההרשמה.\n• מספר הטלפון הוא המזהה הייחודי של החשבון ואסור להעביר חשבון לאדם אחר.\n• ניתן לפתוח חשבון אחד בלבד לכל אדם.',
+  },
+  {
+    icon: <Scale size={20} />,
+    title: '3. תפקיד הפלטפורמה',
+    content:
+      'TicketIL היא פלטפורמת קישור (Marketplace) בלבד המחברת בין מוכרי כרטיסים פרטיים לבין קונים פוטנציאליים.\n\n• אנחנו **איננו צד** לעסקה בין המוכר לקונה.\n• אנחנו **איננו מעבדים תשלומים** ואיננו אחראים להעברת כספים.\n• אנחנו **איננו אוחזים בכרטיסים** ואיננו מבצעים מסירה שלהם.\n• אנחנו **איננו מבטיחים** את אמינות, זמינות או תקפות הכרטיסים.\n\nכל אחריות משפטית על העסקה — לרבות מסירת הכרטיס, תקפותו, והתשלום — חלה באופן בלעדי על המוכר והקונה.',
   },
   {
     icon: <Tag size={20} />,
-    title: 'כללי קנייה ומכירה',
-    content: '• איסור ספסרות: חל איסור מוחלט למכור כרטיס במחיר הגבוה מהמחיר הנקוב.\n\n• אמינות הכרטיס: המוכר מתחייב כי הכרטיס שברשותו תקף ומקורי.\n\n• העברת כרטיס: העברת הכרטיס מתבצעת ישירות בין המוכר לקונה.\n\n• אחריות: המוכר אחראי באופן מלא לתקינות הכרטיס.',
+    title: '4. התחייבויות המוכר',
+    content:
+      'המוכר מתחייב כי:\n\n• הכרטיס המוצע הוא מקורי, בתוקף ובבעלותו החוקית.\n• הכרטיס לא נמכר כבר לאדם אחר ואינו מפורסם בפלטפורמות אחרות במקביל.\n• המחיר המפורסם **אינו עולה** על המחיר הנקוב על פני הכרטיס, בהתאם לחוק איסור ספסרות בכרטיסים, תשמ"ב-1982 (ראה סעיף 7).\n• הפרטים שהזין (יציע, שורה, כסא, מועד האירוע) מדויקים.\n• אם הכרטיס נמכר, המוכר מחויב לסמן את הסטטוס כ"נמכר" באתר **תוך 24 שעות** או להסיר את המודעה.\n• המוכר אחראי בלעדית להעברת הכרטיס לקונה לאחר קבלת התשלום.\n• במקרה של אירוע שבוטל או נדחה — המוכר יחזיר את התשלום לקונה, בהתאם למדיניות המארגן.',
   },
   {
-    icon: <ArrowLeftRight size={20} />,
-    title: 'תשלומים ועמלות',
-    content: 'Ticketil אינה גובה עמלות על פרסום או מכירת כרטיסים. התשלום מתבצע ישירות בין הקונה למוכר.',
+    icon: <ShoppingCart size={20} />,
+    title: '5. התחייבויות הקונה',
+    content:
+      '• הקונה אחראי לאמת את פרטי הכרטיס והמוכר **לפני** ביצוע התשלום.\n• מומלץ לבקש מהמוכר תמונה של הכרטיס (עם מחיקת נתונים רגישים) לפני העברת כסף.\n• הקונה מבצע את התשלום ישירות למוכר באחריותו המלאה.\n• הקונה מתחייב שלא להתחזות לאדם אחר ושלא להשתמש במידע של המוכר למטרות פסולות.\n• במקרה של אי-קבלת הכרטיס או זיוף — על הקונה לפנות ישירות למוכר, ובמקביל לדווח למפעילה דרך עמוד התמיכה.',
   },
   {
-    icon: <XCircle size={20} />,
-    title: 'ביטולים והחזרים',
-    content: 'ביטולים והחזרים מתבצעים ישירות בין הקונה למוכר. Ticketil אינה אחראית על תהליכי ביטול או החזרים.',
+    icon: <CreditCard size={20} />,
+    title: '6. תשלומים',
+    content:
+      '• **TicketIL אינה גובה עמלות** מהמוכרים או מהקונים.\n• **TicketIL אינה מעבדת תשלומים ואינה אחראית לתשלום** — הוא מתבצע ישירות בין הצדדים בערוץ שיבחרו (ביט, Paybox, העברה בנקאית, מזומן וכד\').\n• המפעילה ממליצה על אמצעי תשלום הניתנים לתיעוד (ביט/Paybox) למניעת הונאות.\n• המפעילה **אינה מבצעת החזרים** מכל סוג שהוא. החזרים בין המוכר לקונה — באחריותם בלבד.',
+  },
+  {
+    icon: <Ban size={20} />,
+    title: '7. איסור ספסרות — חוק מחייב',
+    content:
+      'על פי חוק איסור ספסרות בכרטיסים, תשמ"ב-1982:\n\n**אסור למכור כרטיס במחיר הגבוה מהמחיר הנקוב על פני הכרטיס.**\n\nעבירה על החוק מהווה עבירה פלילית לפי סעיף 2 לחוק.\n\nTicketIL שומרת לעצמה את הזכות:\n• להסיר באופן מיידי מודעות שהמחיר בהן חורג מהמחיר הנקוב.\n• לחסום משתמשים שפרסמו מודעות ספסרות.\n• לדווח לרשויות אכיפת החוק על מקרים חוזרים.\n\nהמחיר המקסימלי באתר הוא 5,000₪ — אך מגבלה זו אינה אישור לחרוג מהמחיר הנקוב.',
+  },
+  {
+    icon: <ShieldAlert size={20} />,
+    title: '8. שימושים אסורים',
+    content:
+      'אסור בהחלט:\n\n• פרסום כרטיסים מזויפים, גנובים או שאינם בבעלותך.\n• פרסום מידע כוזב, מטעה או פוגעני.\n• שימוש בשירות להונאה, הלבנת הון או כל פעילות בלתי חוקית.\n• שליחת ספאם, פרסומות או תוכן לא רלוונטי דרך השירות.\n• ניסיון לפרוץ, לשבש או לעקוף את מערכות האבטחה של האתר.\n• איסוף נתונים מהאתר באמצעות Bots, Scraping או אוטומציה ללא אישור.\n• מכירת החשבון, שכירתו או העברתו.\n• התחזות לאדם אחר, לחברה או לרשות.\n\nהפרה של סעיף זה תגרור חסימה מיידית ותטופל על פי החוק.',
+  },
+  {
+    icon: <FileText size={20} />,
+    title: '9. קניין רוחני',
+    content:
+      '• כל זכויות הקניין הרוחני באתר — לרבות השם "TicketIL", הלוגו, העיצוב, הקוד והתוכן המקורי — שייכות למפעילה.\n• אסור להעתיק, לשכפל, להפיץ או לעשות שימוש מסחרי בתוכן האתר ללא אישור בכתב.\n• המשתמש מקבל רישיון מוגבל לצפייה ולשימוש אישי בלבד.\n• תוכן שהמשתמש מעלה (פרטי כרטיסים, הערות) נשאר בבעלותו, אך הוא מעניק למפעילה רישיון להציגו באתר.',
+  },
+  {
+    icon: <Lock size={20} />,
+    title: '10. פרטיות והגנת מידע',
+    content:
+      'איסוף, שמירה ועיבוד של נתונים אישיים מוסדרים במדיניות הפרטיות הנפרדת שלנו.\n\nבמהלך השימוש בשירות אנו אוספים: מספר טלפון, שם, פרטי כרטיסים שפורסמו ונתוני שימוש אנונימיים.\n\nלפרטים מלאים — קרא את מדיניות הפרטיות.',
+  },
+  {
+    icon: <AlertTriangle size={20} />,
+    title: '11. הגבלת אחריות',
+    content:
+      'השירות ניתן "כפי שהוא" (AS IS), ללא כל אחריות מפורשת או משתמעת.\n\nהמפעילה אינה אחראית ל:\n\n• אמינות, תקפות, מצב פיזי או משפטי של הכרטיסים המפורסמים.\n• התנהגות המשתמשים או אמינות המידע שהם מספקים.\n• נזקים ישירים, עקיפים, תוצאתיים או מקריים הנובעים משימוש בשירות.\n• אובדן רווחים, הזדמנויות עסקיות, מידע או מוניטין.\n• שיבושים טכניים, השבתות, תקלות שרת או אובדן נתונים.\n• שינוי/ביטול אירוע על ידי המארגן.\n\nתקרת האחריות המקסימלית של המפעילה (אם תיקבע אחריות כזו בכל זאת) — **100₪**.\n\nאין באמור בסעיף זה כדי לשלול אחריות שלא ניתן לשלול על פי דין.',
+  },
+  {
+    icon: <Users size={20} />,
+    title: '12. שיפוי',
+    content:
+      'המשתמש מתחייב לשפות ולפצות את המפעילה, עובדיה ונציגיה, בגין כל נזק, הפסד, תביעה או הוצאה (לרבות שכר טרחת עו"ד) שייגרמו למפעילה כתוצאה מ:\n\n• הפרה של תקנון זה על ידי המשתמש.\n• הפרה של כל דין החל על המשתמש.\n• תוכן שפרסם המשתמש.\n• פעולה של המשתמש כלפי צד שלישי.',
+  },
+  {
+    icon: <Ban size={20} />,
+    title: '13. השעיה וסיום חשבון',
+    content:
+      'המפעילה רשאית, לפי שיקול דעתה הבלעדי וללא הודעה מוקדמת:\n\n• להסיר מודעות המפרות את התקנון או את החוק.\n• להשעות או לסגור חשבון של משתמש המפר את התקנון.\n• לחסום IP או מספרי טלפון ספציפיים.\n• להפסיק את פעילות השירות, כולו או חלקו, בכל עת.\n\nהמשתמש רשאי למחוק את חשבונו בכל עת דרך עמוד התמיכה. לאחר המחיקה — הנתונים יימחקו תוך 30 ימים, למעט נתונים שהמפעילה מחויבת לשמור מתוקף חוק.',
+  },
+  {
+    icon: <RefreshCw size={20} />,
+    title: '14. שינויים בתקנון',
+    content:
+      'המפעילה רשאית לעדכן את התקנון מעת לעת. שינויים מהותיים יפורסמו בדף הבית ו/או באמצעות הודעה אישית (דוא"ל/SMS) לפחות 14 ימים מראש.\n\nהמשך שימוש בשירות לאחר הכניסה לתוקף של תקנון מעודכן מהווה הסכמה לתנאים החדשים. אם אינך מסכים לשינוי — עליך להפסיק את השימוש ולמחוק את חשבונך.',
+  },
+  {
+    icon: <Gavel size={20} />,
+    title: '15. דין וסמכות שיפוט',
+    content:
+      '• תקנון זה כפוף לדין הישראלי בלבד.\n• סמכות השיפוט הבלעדית לדון בכל תביעה או מחלוקת הקשורים לתקנון או לשירות — נתונה לבתי המשפט המוסמכים בתל אביב-יפו.\n• אם סעיף מסוים בתקנון ייפסל על ידי בית משפט — הדבר לא ישפיע על תוקף יתר הסעיפים.',
+  },
+  {
+    icon: <Mail size={20} />,
+    title: '16. יצירת קשר',
+    content:
+      'לכל שאלה, תלונה, דיווח על הפרה או בקשה בנוגע לתקנון:\n\n• דרך עמוד התמיכה באתר: /support\n• דוא"ל: ticketil.x@gmail.com\n\nאנו משתדלים להגיב לכל פנייה תוך 3 ימי עסקים.',
   },
 ];
 
 export default function TermsPage() {
   const router = useRouter();
-  const [expanded, setExpanded] = useState<number | null>(1);
+  const [expanded, setExpanded] = useState<number | null>(0);
 
   return (
-    <div className="pt-4">
+    <div className="pt-4 pb-10">
       {/* Header */}
       <div className="flex items-center justify-between px-4 pb-4 border-b border-slate-200">
-        <button onClick={() => router.back()} className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
-          <ArrowLeft size={16} className="text-brand" />
+        <button
+          onClick={() => router.back()}
+          className="w-11 h-11 rounded-full bg-slate-100 flex items-center justify-center"
+          aria-label="חזרה"
+        >
+          <ArrowLeft size={20} className="text-brand" />
         </button>
         <h1 className="text-lg font-bold flex-1 text-center">תקנון שימוש</h1>
-        <Link href="/"><SiteLogo /></Link>
+        <Link href="/" aria-label="דף הבית">
+          <SiteLogo />
+        </Link>
       </div>
 
       {/* Intro */}
-      <div className="bg-slate-50 p-4 text-center">
-        <p className="text-sm font-bold text-brand mb-3">עודכן לאחרונה: אפריל 2026</p>
-        <p className="text-sm text-slate-600 leading-relaxed">
-          ברוכים הבאים לפלטפורמת הכרטיסים המאובטחת של אוהדי הספורט בישראל. השימוש באפליקציה כפוף לתנאים המפורטים להלן.
-          <br />
-          TicketIL היא פלטפורמת קישור בלבד — אנו לא אחראים לעסקאות, לתשלומים ולאספקת הכרטיס בפועל.
+      <div className="bg-slate-50 p-4">
+        <p className="text-sm font-bold text-brand mb-2 text-center">
+          עודכן לאחרונה: אפריל 2026
+        </p>
+        <p className="text-sm text-slate-700 leading-relaxed text-center">
+          ברוכים הבאים ל-TicketIL. תקנון זה מגדיר את הכללים המשפטיים לשימוש בשירות.
+          השימוש בשירות מהווה הסכמה מלאה לתנאים המפורטים להלן.
+        </p>
+        <p className="text-xs text-slate-500 mt-3 text-center leading-relaxed">
+          💡 TicketIL היא פלטפורמת קישור בלבד. אנחנו לא מוכרים כרטיסים, לא מעבדים
+          תשלומים ולא צד בעסקה.
         </p>
         <Link
           href="/privacy"
-          className="inline-block mt-3 text-xs text-brand font-semibold underline"
+          className="block text-xs text-brand font-semibold underline text-center mt-3"
         >
-          מדיניות פרטיות ←
+          למדיניות פרטיות ←
         </Link>
       </div>
 
@@ -67,13 +174,13 @@ export default function TermsPage() {
             key={i}
             onClick={() => setExpanded(expanded === i ? null : i)}
             className={`w-full text-right bg-white rounded-xl p-4 border transition-colors ${
-              expanded === i ? 'border-brand border-1.5' : 'border-slate-200'
+              expanded === i ? 'border-brand' : 'border-slate-200'
             }`}
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <span className="text-brand">{sec.icon}</span>
-                <span className="text-base font-bold">{sec.title}</span>
+                <span className="text-sm font-bold">{sec.title}</span>
               </div>
               {expanded === i ? (
                 <ChevronUp size={20} className="text-slate-400" />
@@ -82,7 +189,7 @@ export default function TermsPage() {
               )}
             </div>
             {expanded === i && (
-              <p className="text-sm text-slate-600 leading-7 mt-3 pt-3 border-t border-slate-200 whitespace-pre-line">
+              <p className="text-sm text-slate-700 leading-7 mt-3 pt-3 border-t border-slate-200 whitespace-pre-line">
                 {sec.content}
               </p>
             )}
@@ -91,18 +198,17 @@ export default function TermsPage() {
       </div>
 
       {/* Contact CTA */}
-      <div className="px-4 pb-4">
-        <h3 className="text-base font-bold text-right mb-2">יצירת קשר ודיווח</h3>
+      <div className="px-4">
         <div className="bg-slate-100 rounded-xl p-4 text-center">
-          <p className="text-sm text-slate-600 leading-relaxed mb-4">
-            נתקלתם בבעיה? יש לכם שאלה לגבי התקנון? צוות התמיכה שלנו זמין עבורכם.
+          <p className="text-sm text-slate-600 leading-relaxed mb-3">
+            יש שאלה על התקנון? נתקלת במודעה מפרה?
           </p>
           <Link
             href="/support"
             className="w-full bg-brand text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 hover:bg-brand-dark transition-colors"
           >
-            <Mail size={20} />
-            <span>שלח פנייה לתמיכה</span>
+            <Mail size={18} />
+            <span>שלחו לנו פנייה</span>
           </Link>
         </div>
       </div>
