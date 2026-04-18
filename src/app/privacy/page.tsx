@@ -39,6 +39,8 @@ export default function PrivacyPage() {
           <p>
             TicketIL (&quot;האפליקציה&quot;, &quot;אנחנו&quot;) היא פלטפורמה לחיבור בין מוכרי כרטיסים לקונים
             למשחקי ליגת העל בכדורגל. האפליקציה פועלת בישראל וכפופה לחוק הגנת הפרטיות, התשמ&quot;א-1981.
+            השימוש מותר מגיל 18 בלבד; איננו אוספים במודע מידע מקטינים. אם הגעת למידע שנאסף מקטין,
+            פנה אלינו ונמחק אותו מיידית.
           </p>
         </section>
 
@@ -66,7 +68,7 @@ export default function PrivacyPage() {
           <h2 className="text-base font-bold mb-2">4. שיתוף עם צדדים שלישיים</h2>
           <p>אנחנו לא מוכרים את המידע שלך. שימוש בשירותים חיצוניים:</p>
           <ul className="list-disc pr-5 space-y-1 mt-1">
-            <li><strong>Supabase</strong> — אחסון נתונים, מאומת SOC 2.</li>
+            <li><strong>Supabase</strong> — אחסון נתונים ואימות זהות (SMS OTP), מאומת SOC 2. מספר הטלפון נשלח ל-Supabase Auth רק לצורך שליחת קוד אימות חד-פעמי.</li>
             <li><strong>PostHog</strong> — אנליטיקה (שרתי EU, תואם GDPR).</li>
             <li><strong>WhatsApp</strong> — כשאתה לוחץ &quot;צור קשר&quot;, מועבר קישור עם שם המוכר והקבוצות. המידע יוצא מהאפליקציה ומנוהל על ידי Meta.</li>
           </ul>
@@ -96,6 +98,10 @@ export default function PrivacyPage() {
             <li>זכות לתיקון מידע שגוי.</li>
             <li>זכות למחיקה.</li>
             <li>זכות להתנגד לעיבוד מידע.</li>
+            <li>
+              זכות להגיש תלונה לרשות להגנת הפרטיות במשרד המשפטים אם אתה סבור
+              שהפרנו את חוק הגנת הפרטיות.
+            </li>
           </ul>
         </section>
 
