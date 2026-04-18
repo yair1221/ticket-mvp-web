@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { User, HelpCircle, FileText, Headphones, ChevronLeft, LogIn, Ticket, LogOut, Loader2 } from 'lucide-react';
+import { User, HelpCircle, FileText, Headphones, ChevronLeft, LogIn, Ticket, LogOut, Loader2, Pencil, Check, X } from 'lucide-react';
 import { useAuth } from '@/lib/auth-context';
 import { createClient } from '@/lib/supabase/client';
 import SiteLogo from '@/components/shared/SiteLogo';
@@ -20,6 +20,10 @@ export default function ProfilePage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [profile, setProfile] = useState<{ name: string | null; phone: string } | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [nameDraft, setNameDraft] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
 
   useEffect(() => {
     if (!user) return;
@@ -34,6 +38,32 @@ export default function ProfilePage() {
     };
     fetchProfile();
   }, [user]);
+
+  const handleSaveName = async () => {
+    const trimmed = nameDraft.trim();
+    if (!trimmed) {
+      setSaveError('נא להזין שם מלא');
+      return;
+    }
+    if (trimmed.length > 60) {
+      setSaveError('שם ארוך מדי');
+      return;
+    }
+    setSaving(true);
+    setSaveError('');
+    const supabase = createClient();
+    const { error } = await supabase
+      .from('profiles')
+      .update({ name: trimmed })
+      .eq('id', user!.id);
+    setSaving(false);
+    if (error) {
+      setSaveError('שמירה נכשלה, נסה שוב');
+      return;
+    }
+    setProfile((p) => (p ? { ...p, name: trimmed } : p));
+    setIsEditing(false);
+  };
 
   const handleLogout = () => {
     if (confirm('האם אתה בטוח שברצונך להתנתק?')) {
@@ -74,8 +104,53 @@ export default function ProfilePage() {
         </div>
         {user ? (
           <>
-            <h2 className="text-lg font-bold">{profile?.name || 'משתמש'}</h2>
-            <p className="text-xs text-slate-500">{profile?.phone}</p>
+            {isEditing ? (
+              <div className="w-full max-w-xs space-y-2">
+                <input
+                  type="text"
+                  value={nameDraft}
+                  onChange={(e) => setNameDraft(e.target.value.slice(0, 60))}
+                  maxLength={60}
+                  autoFocus
+                  placeholder="שם מלא"
+                  className="w-full border border-slate-200 rounded-xl p-3 text-center text-base font-bold bg-white"
+                />
+                {saveError && (
+                  <p className="text-xs text-red-500 text-center">{saveError}</p>
+                )}
+                <div className="flex gap-2 justify-center">
+                  <button
+                    onClick={handleSaveName}
+                    disabled={saving}
+                    className="flex items-center gap-1 bg-brand text-white font-bold px-4 py-2 rounded-xl disabled:opacity-50"
+                  >
+                    {saving ? <Loader2 size={16} className="animate-spin" /> : <Check size={16} />}
+                    <span className="text-sm">שמור</span>
+                  </button>
+                  <button
+                    onClick={() => { setIsEditing(false); setSaveError(''); }}
+                    className="flex items-center gap-1 bg-slate-100 text-slate-700 font-bold px-4 py-2 rounded-xl"
+                  >
+                    <X size={16} />
+                    <span className="text-sm">ביטול</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="flex items-center gap-2">
+                  <h2 className="text-lg font-bold">{profile?.name || 'משתמש'}</h2>
+                  <button
+                    onClick={() => { setNameDraft(profile?.name ?? ''); setIsEditing(true); }}
+                    aria-label="ערוך שם"
+                    className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center"
+                  >
+                    <Pencil size={14} className="text-brand" />
+                  </button>
+                </div>
+                <p className="text-xs text-slate-500">{profile?.phone}</p>
+              </>
+            )}
           </>
         ) : (
           <>

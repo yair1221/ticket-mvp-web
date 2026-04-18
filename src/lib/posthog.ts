@@ -8,6 +8,12 @@ if (isClient && !posthogLib.__loaded) {
     capture_pageview: true,
     capture_pageleave: true,
     persistence: 'localStorage',
+    // Privacy: mask all user-entered values in session recordings so that
+    // phone numbers, names, notes and OTP codes are never sent to PostHog.
+    session_recording: {
+      maskAllInputs: true,
+      maskTextSelector: 'input,textarea,select',
+    },
   });
 }
 

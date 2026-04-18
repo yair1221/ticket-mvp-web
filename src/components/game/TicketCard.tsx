@@ -1,6 +1,7 @@
 'use client';
 
-import { User, MessageCircle, ShieldCheck } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { User, MessageCircle, ShieldCheck, Flag } from 'lucide-react';
 import type { ListingWithSeller } from '@/lib/types/database';
 import { buildWhatsappLink } from '@/lib/utils/whatsapp';
 import { posthog } from '@/lib/posthog';
@@ -12,6 +13,14 @@ interface TicketCardProps {
 }
 
 export default function TicketCard({ listing, homeTeam, awayTeam }: TicketCardProps) {
+  const router = useRouter();
+
+  const handleReport = () => {
+    posthog.capture('listing_report_clicked', { listing_id: listing.id });
+    const params = new URLSearchParams({ reportListing: listing.id });
+    router.push(`/support?${params.toString()}`);
+  };
+
   const handleContact = () => {
     const phone = listing.profiles?.whatsapp || listing.profiles?.phone || '';
     const link = buildWhatsappLink(phone, homeTeam, awayTeam, listing.section, listing.price);
@@ -28,8 +37,15 @@ export default function TicketCard({ listing, homeTeam, awayTeam }: TicketCardPr
 
   return (
     <div className="bg-white rounded-2xl px-3.5 py-2.5 border border-slate-200 shadow-sm">
-      {/* Top row: seller info */}
-      <div className="flex items-center justify-end">
+      {/* Top row: seller info + report */}
+      <div className="flex items-center justify-between">
+        <button
+          onClick={handleReport}
+          aria-label="דווח על מודעה"
+          className="w-7 h-7 rounded-full bg-slate-50 flex items-center justify-center hover:bg-slate-100 transition-colors"
+        >
+          <Flag size={13} className="text-slate-400" />
+        </button>
         <div className="flex items-center gap-2">
           <div className="flex flex-col items-end">
             <span className="text-base font-bold">{listing.profiles?.name || 'מוכר'}</span>

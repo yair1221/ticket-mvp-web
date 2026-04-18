@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, MessageCircle, Mail, Send, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 import SiteLogo from '@/components/shared/SiteLogo';
@@ -11,11 +11,20 @@ import { posthog } from '@/lib/posthog';
 
 export default function SupportPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [subject, setSubject] = useState('בעיה ברכישת כרטיס');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [sent, setSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    const reportListingId = searchParams.get('reportListing');
+    if (reportListingId) {
+      setSubject('דיווח על מודעה מפרה / חשודה');
+      setMessage(`מזהה מודעה: ${reportListingId}\n\nסיבת הדיווח:\n`);
+    }
+  }, [searchParams]);
 
   const handleSubmit = async () => {
     if (!email || !message) {
