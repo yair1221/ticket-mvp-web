@@ -40,9 +40,9 @@ export default function BottomNav() {
             >
               {tab.highlight && Icon ? (
                 <div className={cn(
-                  'w-14 h-14 rounded-full flex items-center justify-center -mt-5 shadow-lg ring-4 ring-white bg-brand text-white'
+                  'w-11 h-11 rounded-full flex items-center justify-center -mt-3 shadow-lg ring-[3px] ring-white bg-brand text-white'
                 )}>
-                  <Icon size={28} />
+                  <Icon size={22} />
                 </div>
               ) : tab.useSoccer ? (
                 <SportsSoccerIcon style={{ fontSize: 22, color: isActive ? '#2563EB' : '#94A3B8' }} />

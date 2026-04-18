@@ -169,20 +169,20 @@ export default function HowItWorksPage() {
                   שלב {step.number}
                 </span>
               </div>
-              <div className="bg-white rounded-2xl border border-slate-200 p-5">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-brand/10 flex items-center justify-center shrink-0">
-                    <Icon size={28} className="text-brand" />
+              <div className="bg-white rounded-xl border border-slate-200 p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-brand/10 flex items-center justify-center shrink-0">
+                    <Icon size={24} className="text-brand" />
                   </div>
                   <div className="flex-1 text-right">
-                    <span className="text-lg font-bold">{step.title}</span>
-                    <p className="text-base text-slate-500 leading-relaxed mt-1">{step.description}</p>
+                    <span className="text-base font-bold">{step.title}</span>
+                    <p className="text-sm text-slate-500 leading-relaxed mt-0.5">{step.description}</p>
                   </div>
                 </div>
               </div>
               {i < steps.length - 1 && (
-                <div className="flex justify-center py-2">
-                  <ChevronDown size={32} className="text-brand" />
+                <div className="flex justify-center py-1.5">
+                  <ChevronDown size={28} className="text-brand" />
                 </div>
               )}
             </div>
