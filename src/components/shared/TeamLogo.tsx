@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { Shield } from 'lucide-react';
-import { TEAMS } from '@/lib/constants/teams';
+import { getTeam } from '@/lib/constants/teams';
 
 interface TeamLogoProps {
   teamName: string;
@@ -8,8 +8,7 @@ interface TeamLogoProps {
 }
 
 function getTeamLogoPath(teamName: string): string | null {
-  const team = TEAMS.find((t) => t.name === teamName || t.shortName === teamName);
-  return team?.logo ?? null;
+  return getTeam(teamName)?.logo ?? null;
 }
 
 export default function TeamLogo({ teamName, size = 48 }: TeamLogoProps) {

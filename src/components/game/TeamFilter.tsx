@@ -50,7 +50,7 @@ export default function TeamFilter({ selectedTeam, onSelect }: TeamFilterProps) 
         : TEAMS
       ).map((team) => (
         <button
-          key={team.id}
+          key={team.name}
           onClick={() => handleSelect(team.name === selectedTeam ? null : team.name)}
           className="flex flex-col items-center gap-1.5 min-w-[60px] transition-all"
         >
@@ -64,7 +64,7 @@ export default function TeamFilter({ selectedTeam, onSelect }: TeamFilterProps) 
             'text-[10px] font-medium whitespace-nowrap',
             selectedTeam === team.name ? 'text-brand font-semibold' : 'text-slate-500'
           )}>
-            {team.shortName}
+            {team.name}
           </span>
         </button>
       ))}

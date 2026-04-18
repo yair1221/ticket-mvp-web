@@ -12,23 +12,25 @@ export type ScrapedMatch = {
 };
 
 function normalizeDate(raw: string): string | null {
-  const match = raw.trim().match(/^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$/);
-  if (!match) return null;
-  const [, dd, mm, yy] = match;
+  const m = raw.trim().match(/^(\d{1,2})\.(\d{1,2})\.(\d{2,4})$/);
+  if (!m) return null;
+  const dd = m[1]!;
+  const mm = m[2]!;
+  const yy = m[3]!;
   const yyyy = yy.length === 2 ? `20${yy}` : yy;
   return `${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
 }
 
 function normalizeTime(raw: string): string | null {
-  const match = raw.trim().match(/^(\d{1,2}):(\d{2})$/);
-  if (!match) return null;
-  return `${match[1].padStart(2, "0")}:${match[2]}`;
+  const m = raw.trim().match(/^(\d{1,2}):(\d{2})$/);
+  if (!m) return null;
+  return `${m[1]!.padStart(2, "0")}:${m[2]!}`;
 }
 
 function splitTeams(label: string): { home: string; away: string } | null {
   const parts = label.split(/\s*-\s*/);
   if (parts.length !== 2) return null;
-  return { home: parts[0].trim(), away: parts[1].trim() };
+  return { home: parts[0]!.trim(), away: parts[1]!.trim() };
 }
 
 export function parseMatches(html: string): ScrapedMatch[] {

@@ -1,26 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
+import { getTeam } from "../../src/lib/constants/teams";
 import type { ScrapedMatch } from "./parse";
-
-function teamCity(team: string): string {
-  const map: Record<string, string> = {
-    'הפועל ב"ש': "באר שבע",
-    'הפועל פ"ת': "פתח תקווה",
-    'הפועל ת"א': "תל אביב",
-    'מכבי ת"א': "תל אביב",
-    'בית"ר י-ם': "ירושלים",
-    "מכבי חיפה": "חיפה",
-    "הפועל חיפה": "חיפה",
-    "מכבי בני ריינה": "ריינה",
-    "עירוני טבריה": "טבריה",
-    'הפועל ק"ש': "קריית שמונה",
-    "מכבי נתניה": "נתניה",
-    "אשדוד": "אשדוד",
-    'מ.ס אשדוד': "אשדוד",
-    "בני סכנין": "סכנין",
-    "הפועל ירושלים": "ירושלים",
-  };
-  return map[team] ?? "";
-}
 
 export async function upsertMatches(matches: ScrapedMatch[]) {
   const url = process.env.SUPABASE_URL;
@@ -38,7 +18,7 @@ export async function upsertMatches(matches: ScrapedMatch[]) {
     date: m.date,
     time: m.time,
     stadium: m.stadium,
-    city: teamCity(m.homeTeam),
+    city: getTeam(m.homeTeam)?.city ?? "",
     status: "upcoming" as const,
   }));
 
