@@ -7,6 +7,8 @@ export interface Event {
   stadium: string;
   city: string;
   status: 'upcoming' | 'completed' | 'cancelled';
+  date_tbd?: boolean;
+  time_tbd?: boolean;
   created_at?: string;
 }
 

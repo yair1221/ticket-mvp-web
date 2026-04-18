@@ -20,6 +20,8 @@ export async function upsertMatches(matches: ScrapedMatch[]) {
     stadium: m.stadium,
     city: getTeam(m.homeTeam)?.city ?? "",
     status: "upcoming" as const,
+    date_tbd: m.dateIsRange,
+    time_tbd: m.timeIsTbd,
   }));
 
   const { data, error } = await supabase

@@ -20,7 +20,7 @@ export default function MyListingsPage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const [listings, setListings] = useState<ListingWithEvent[]>([]);
-  const [filter, setFilter] = useState<'all' | 'active' | 'sold'>('all');
+  const [filter, setFilter] = useState<'all' | 'active' | 'closed'>('all');
   const [loading, setLoading] = useState(true);
 
   const fetchListings = useCallback(async () => {
@@ -32,7 +32,8 @@ export default function MyListingsPage() {
       .eq('seller_id', user.id)
       .order('created_at', { ascending: false });
 
-    if (filter !== 'all') query = query.eq('status', filter);
+    if (filter === 'active') query = query.eq('status', 'active');
+    else if (filter === 'closed') query = query.in('status', ['sold', 'removed']);
 
     const { data } = await query;
     setListings((data as ListingWithEvent[]) || []);
@@ -78,25 +79,25 @@ export default function MyListingsPage() {
     );
   }
 
-  const filters: { key: 'all' | 'active' | 'sold'; label: string }[] = [
+  const filters: { key: 'all' | 'active' | 'closed'; label: string }[] = [
     { key: 'all', label: 'הכל' },
     { key: 'active', label: 'פעילות' },
-    { key: 'sold', label: 'נמכרו' },
+    { key: 'closed', label: 'נמכרו / בוטלו' },
   ];
 
   return (
     <div className="pt-4">
       {/* Header */}
       <div className="flex items-center justify-between px-4 pb-4 border-b border-slate-200">
-        <button onClick={() => router.back()} className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
-          <ArrowLeft size={16} className="text-brand" />
+        <button onClick={() => router.back()} className="w-11 h-11 rounded-full bg-slate-100 flex items-center justify-center">
+          <ArrowLeft size={20} className="text-brand" />
         </button>
         <h1 className="text-lg font-bold flex-1 text-center">הכרטיסים שלי</h1>
         <Link href="/"><SiteLogo /></Link>
       </div>
 
       {/* Filter tabs */}
-      <div className="flex gap-2 px-4 py-2 border-b border-slate-200">
+      <div className="flex flex-row-reverse justify-start gap-2 px-4 py-2 border-b border-slate-200">
         {filters.map((f) => (
           <button
             key={f.key}
@@ -155,7 +156,7 @@ export default function MyListingsPage() {
                 <div className="flex items-center gap-2">
                   <Calendar size={14} className="text-slate-400" />
                   <span className="text-xs text-slate-500">
-                    {listing.events && formatEventDate(listing.events.date)} | {listing.events?.time?.slice(0, 5)}
+                    {listing.events && formatEventDate(listing.events.date, listing.events.date_tbd)} | {listing.events?.time_tbd ? 'טרם נקבעה' : listing.events?.time?.slice(0, 5)}
                   </span>
                 </div>
 

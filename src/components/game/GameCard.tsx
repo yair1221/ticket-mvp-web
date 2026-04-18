@@ -22,7 +22,7 @@ export default function GameCard({ event }: GameCardProps) {
           {/* Center - VS & date */}
           <div className="flex flex-col items-center gap-0.5 px-2">
             <span className="text-xs font-semibold text-slate-400">VS</span>
-            <span className="text-sm font-bold">{formatEventDate(event.date)}</span>
+            <span className="text-sm font-bold">{formatEventDate(event.date, event.date_tbd)}</span>
           </div>
 
           {/* Home team */}

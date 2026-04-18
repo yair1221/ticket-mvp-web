@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Tag, Loader2, Star, CheckCircle, Ticket, ArrowLeft } from 'lucide-react';
+import { Tag, Loader2, Star, CheckCircle, Ticket } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/lib/auth-context';
 import { createClient } from '@/lib/supabase/client';
@@ -158,9 +158,7 @@ export default function SellPage() {
     return (
       <div className="px-4 pt-4 space-y-4">
         <div className="flex items-center justify-between">
-          <button onClick={() => router.back()} className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
-            <ArrowLeft size={16} className="text-brand" />
-          </button>
+          <div className="w-9" />
           <h1 className="text-lg font-bold flex-1 text-center">פרסום כרטיס</h1>
           <Link href="/"><SiteLogo /></Link>
         </div>
@@ -209,9 +207,7 @@ export default function SellPage() {
     <div className="px-4 pt-4 space-y-4 pb-4">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <button onClick={() => router.back()} className="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center">
-          <ArrowLeft size={16} className="text-brand" />
-        </button>
+        <div className="w-9" />
         <h1 className="text-lg font-bold flex-1 text-center">פרסום כרטיס</h1>
         <Link href="/"><SiteLogo /></Link>
       </div>
@@ -231,7 +227,7 @@ export default function SellPage() {
               <TeamLogo teamName={selectedEvent.away_team} size={24} />
               <span className="text-[10px] font-semibold">{selectedEvent.away_team}</span>
             </div>
-            <span className="text-xs font-bold">{formatEventDate(selectedEvent.date)}</span>
+            <span className="text-xs font-bold">{formatEventDate(selectedEvent.date, selectedEvent.date_tbd)}</span>
             <div className="flex flex-col items-center gap-0.5 flex-1">
               <TeamLogo teamName={selectedEvent.home_team} size={24} />
               <span className="text-[10px] font-semibold">{selectedEvent.home_team}</span>
@@ -267,7 +263,7 @@ export default function SellPage() {
                   <TeamLogo teamName={event.away_team} size={24} />
                   <span className="text-[10px] font-semibold">{event.away_team}</span>
                     </div>
-                <span className="text-xs font-bold">{formatEventDate(event.date)}</span>
+                <span className="text-xs font-bold">{formatEventDate(event.date, event.date_tbd)}</span>
                 <div className="flex flex-col items-center gap-0.5 flex-1">
                   <TeamLogo teamName={event.home_team} size={24} />
                   <span className="text-[10px] font-semibold">{event.home_team}</span>
@@ -316,7 +312,9 @@ export default function SellPage() {
       {/* Row + Seat */}
       <div className="flex gap-3 flex-row-reverse">
         <div className="flex-1">
-          <label className="block text-xs font-medium text-right mb-2 pr-1">שורה</label>
+          <label className="block text-xs font-medium text-right mb-2 pr-1">
+            שורה <span className="text-slate-400 font-normal">(אופציונלי)</span>
+          </label>
           <input
             type="text"
             value={rowNumber}
@@ -326,7 +324,9 @@ export default function SellPage() {
           />
         </div>
         <div className="flex-1">
-          <label className="block text-xs font-medium text-right mb-2 pr-1">כסא</label>
+          <label className="block text-xs font-medium text-right mb-2 pr-1">
+            כסא <span className="text-slate-400 font-normal">(אופציונלי)</span>
+          </label>
           <input
             type="text"
             value={seatNumber}
@@ -339,7 +339,9 @@ export default function SellPage() {
 
       {/* Notes */}
       <div>
-        <label className="block text-xs font-medium text-right mb-2 pr-1">הערות</label>
+        <label className="block text-xs font-medium text-right mb-2 pr-1">
+          הערות <span className="text-slate-400 font-normal">(אופציונלי)</span>
+        </label>
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
